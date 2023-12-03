@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/order-service/order-service.iml" filepath="$PROJECT_DIR$/order-service/order-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/payment-service/payment-service.iml" filepath="$PROJECT_DIR$/payment-service/payment-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/product-service/product-service.iml" filepath="$PROJECT_DIR$/product-service/product-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/spring-project.iml" filepath="$PROJECT_DIR$/.idea/spring-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/spring-boot-services.iml" filepath="$PROJECT_DIR$/.idea/spring-boot-services.iml" />
     </modules>
   </component>
 </project>
