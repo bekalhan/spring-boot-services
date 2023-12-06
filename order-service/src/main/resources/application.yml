@@ -4,9 +4,9 @@ spring:
   application:
     name: "order"
   datasource:
-    url: jdbc:mysql://localhost:3306/orderservice
+    url: jdbc:mysql://localhost:3306/orderdb
     username: root
-    password: admin
+    password: root07
   jpa:
     show-sql: true
     hibernate:
