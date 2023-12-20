@@ -35,6 +35,7 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 
