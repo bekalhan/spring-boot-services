@@ -28,7 +28,7 @@ public interface UserMapperHelper {
                 .collect(Collectors.toSet()))*/
                 .credentialDto(
                         CredentialsDto.builder()
-                                .credentialId(user.getCredential().getCredentialId())
+                                .credentialId(user.getUserId())
                                 .username(user.getCredential().getUsername())
                                 .password(user.getCredential().getPassword())
                                 .roleBasedAuthority(user.getCredential().getRoleBasedAuthority())
@@ -41,26 +41,31 @@ public interface UserMapperHelper {
     }
 
     public static User map(final UserDto userDto) {
-        System.out.println("g"+userDto);
-        return User.builder()
+        User user = User.builder()
                 .userId(userDto.getUserId())
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .imageUrl(userDto.getImageUrl())
                 .email(userDto.getEmail())
                 .phone(userDto.getPhone())
-                .credential(
-                        Credential.builder()
-                                .credentialId(userDto.getUserId())
-                                .username(userDto.getCredentialDto().getUsername())
-                                .password(userDto.getCredentialDto().getPassword())
-                                .roleBasedAuthority(userDto.getCredentialDto().getRoleBasedAuthority())
-                                .isEnabled(userDto.getCredentialDto().getIsEnabled())
-                                .isAccountNonExpired(userDto.getCredentialDto().getIsAccountNonExpired())
-                                .isAccountNonLocked(userDto.getCredentialDto().getIsAccountNonLocked())
-                                .isCredentialsNonExpired(userDto.getCredentialDto().getIsCredentialsNonExpired())
-                                .build())
                 .build();
+
+        // Map Credential information
+        Credential credential = Credential.builder()
+                .credentialId(userDto.getCredentialDto().getCredentialId())
+                .username(userDto.getCredentialDto().getUsername())
+                .password(userDto.getCredentialDto().getPassword())
+                .roleBasedAuthority(userDto.getCredentialDto().getRoleBasedAuthority())
+                .isEnabled(userDto.getCredentialDto().getIsEnabled())
+                .isAccountNonExpired(userDto.getCredentialDto().getIsAccountNonExpired())
+                .isAccountNonLocked(userDto.getCredentialDto().getIsAccountNonLocked())
+                .isCredentialsNonExpired(userDto.getCredentialDto().getIsCredentialsNonExpired())
+                .build();
+        // Set Credential to User
+        credential.setUser(user);  // Set the user without Credential information
+        user.setCredential(credential);
+
+        return user;
     }
 
 }

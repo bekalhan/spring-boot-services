@@ -34,6 +34,7 @@ public interface CategoryMapperHelper {
     }
 
     public static Category map(final CategoryDto categoryDto) {
+        System.out.println("dto to category "+categoryDto);
         return Category.builder()
                 .categoryId(categoryDto.getCategoryId())
                 .title(categoryDto.getTitle())

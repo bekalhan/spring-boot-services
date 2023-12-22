@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto save(UserDto userDto) {
-        System.out.println("user"+userDto);
         User user = userRepository.findByEmail(userDto.getEmail());
 
         if(user != null){

@@ -104,7 +104,9 @@ public class CategoryController {
     public ResponseEntity<ResponseDto> save(
             @RequestBody
             @Valid final CategoryDto categoryDto) {
+        System.out.println("controller"+categoryDto);
         var createdCategory = categoryService.createCategory(categoryDto);
+        System.out.println("controller2"+createdCategory);
         return ResponseEntity.status(HttpStatus.CREATED).
                 body(new ResponseDto(ProductConstants.STATUS_200, ProductConstants.MESSAGE_201_CATEGORY,createdCategory));
     }
