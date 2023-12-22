@@ -39,7 +39,9 @@ public class Credential extends BaseEntity{
     @Column(name = "is_credentials_non_expired")
     private Boolean isCredentialsNonExpired;
 
-   @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

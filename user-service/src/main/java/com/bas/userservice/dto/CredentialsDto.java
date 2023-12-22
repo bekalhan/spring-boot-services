@@ -1,6 +1,7 @@
 package com.bas.userservice.dto;
 
 import com.bas.userservice.entity.RoleBasedAuthority;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -32,6 +33,7 @@ public class CredentialsDto {
 
     //@JsonProperty("user")
     //@JsonInclude(value = JsonInclude.Include.NON_NULL)
+    @JsonIgnore
     private UserDto userDto;
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)

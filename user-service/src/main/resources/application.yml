@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/userdb
     username: root
-    password: root07
+    password: admin
   jpa:
     show-sql: true
     hibernate:
