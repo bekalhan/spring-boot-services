@@ -10,6 +10,8 @@ import com.bas.productservice.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
+
     @Override
     public List<CategoryDto> getAllCategories() {
         var categories = categoryRepository.findAll();

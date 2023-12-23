@@ -14,6 +14,8 @@ public interface CategoryMapperHelper {
         final var parentCategory = Optional.ofNullable(category
                 .getParentCategory()).orElseGet(() -> new Category());
 
+        System.out.println("bak"+category);
+
         return CategoryDto.builder()
                 .categoryId(category.getCategoryId())
                 .title(category.getTitle())
@@ -32,6 +34,7 @@ public interface CategoryMapperHelper {
     }
 
     public static Category map(final CategoryDto categoryDto) {
+        System.out.println("dto to category "+categoryDto);
         return Category.builder()
                 .categoryId(categoryDto.getCategoryId())
                 .title(categoryDto.getTitle())
