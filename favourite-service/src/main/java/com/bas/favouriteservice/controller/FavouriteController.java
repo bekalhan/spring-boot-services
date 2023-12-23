@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/favourite")
+@RequestMapping("/api/favourites")
 @RequiredArgsConstructor
 public class FavouriteController {
     @Autowired

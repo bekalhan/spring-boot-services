@@ -21,8 +21,8 @@ public class AppConstant {
         public static final String ORDER_SERVICE_HOST = "http://localhost:8600/api/orders";
         public static final String ORDER_SERVICE_API_URL = "http://localhost:8600/api/orders";
 
-        public static final String FAVOURITE_SERVICE_HOST = "http://FAVOURITE-SERVICE/favourite-service";
-        public static final String FAVOURITE_SERVICE_API_URL = "http://FAVOURITE-SERVICE/favourite-service/api/favourites";
+        public static final String FAVOURITE_SERVICE_HOST = "http://favouriteservice/favouriteservice";
+        public static final String FAVOURITE_SERVICE_API_URL = "http://favouriteservice/favouriteservice/api/favourites";
 
         public static final String PAYMENT_SERVICE_HOST = "http://localhost:8400/api/payments";
         public static final String PAYMENT_SERVICE_API_URL = "http://localhost:8400/api/payments";
