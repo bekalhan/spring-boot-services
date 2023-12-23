@@ -10,7 +10,7 @@ import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@ToString
 @Builder
 @Getter
 @Setter

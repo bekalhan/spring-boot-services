@@ -10,7 +10,9 @@ import java.util.Set;
 @Table(name = "credentials")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 public class Credential extends BaseEntity{
     @Id

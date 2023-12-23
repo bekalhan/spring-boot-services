@@ -22,7 +22,7 @@ public class AddressController {
         return ResponseEntity.status(HttpStatus.OK).body(allAdresses);
     }
 
-    @GetMapping("/{addressId12}")
+    @GetMapping("/{addressId}")
     public ResponseEntity<AddressDto> getAddressById(@PathVariable(value="addressId") Integer addressId){
         AddressDto address = addressService.findById(addressId);
         return ResponseEntity.status(HttpStatus.OK).body(address);

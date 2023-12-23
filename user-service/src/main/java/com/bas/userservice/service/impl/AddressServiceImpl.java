@@ -3,6 +3,7 @@ package com.bas.userservice.service.impl;
 import com.bas.userservice.dto.AddressDto;
 import com.bas.userservice.entity.Address;
 import com.bas.userservice.entity.User;
+import com.bas.userservice.exception.ResourceAlreadyExistException;
 import com.bas.userservice.exception.ResourceNotFoundException;
 import com.bas.userservice.helper.AddressMapperHelper;
 import com.bas.userservice.repository.AddressRepository;
@@ -39,7 +40,9 @@ public class AddressServiceImpl implements AddressService {
         User findUser = userRepository.findById(addressDto.getUserId())
                 .orElseThrow(()->new ResourceNotFoundException("User","id",addressDto.getUserId()));
 
-        System.out.println("adress"+addressDto);
+        Address findAddress = addressRepository.findByFullAddress(addressDto.getFullAddress());
+
+        if(findAddress != null) throw new ResourceAlreadyExistException("Address","full address",addressDto.getFullAddress());
 
         return AddressMapperHelper.map(this.addressRepository.save(AddressMapperHelper.map(addressDto,findUser)));
     }

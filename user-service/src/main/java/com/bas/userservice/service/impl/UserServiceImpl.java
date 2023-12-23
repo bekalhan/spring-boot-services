@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        System.out.println("bak"+userRepository.findAll());
         return userRepository.findAll().stream()
                 .map(UserMapperHelper::map)
                 .distinct()

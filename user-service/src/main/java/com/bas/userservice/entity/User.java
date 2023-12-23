@@ -12,7 +12,9 @@ import java.util.Set;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 public class User extends BaseEntity{
     @Id
