@@ -1,0 +1,16 @@
+server:
+  port: 8900
+spring:
+  application:
+    name: "favourites"
+  datasource:
+    url: jdbc:mysql://localhost:3306/favouritesdb
+    username: root
+    password: admin
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: always
