@@ -28,10 +28,12 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentDto> findAll() {
+        System.out.println("find"+paymentRepository.findAll());
         return this.paymentRepository.findAll()
                 .stream()
                 .map(PaymentMapping::map)
                 .map(p -> {
+                    System.out.println("p"+p);
                     p.setOrderDto(this.restTemplate.getForObject(Constants.Domains
                             .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
                     return p;

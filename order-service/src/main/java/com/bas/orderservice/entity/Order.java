@@ -1,5 +1,6 @@
 package com.bas.orderservice.entity;
 
+import com.bas.orderservice.constant.AppConstant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -31,7 +32,7 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,shape = JsonFormat.Shape.STRING)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT)
     LocalDateTime orderDate;
 
     @Column(name = "order_desc")

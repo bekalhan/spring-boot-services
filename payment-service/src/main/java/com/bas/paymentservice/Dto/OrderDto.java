@@ -27,5 +27,5 @@ public class OrderDto {
     @DateTimeFormat(pattern = Constants.LOCAL_DATE_TIME_FORMAT)
     private LocalDateTime orderDate;
     private String orderDesc;
-    private Double orderFee;
+    private Double totalPrice;
 }

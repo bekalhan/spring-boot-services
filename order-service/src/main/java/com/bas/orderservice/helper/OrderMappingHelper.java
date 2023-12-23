@@ -29,7 +29,7 @@ public interface OrderMappingHelper {
     public static Order map(final OrderDto orderDto) {
         return Order.builder()
                 .orderId(orderDto.getOrderId())
-                .orderDate(LocalDateTime.now())
+                .orderDate(orderDto.getOrderDate())
                 .orderDesc(orderDto.getOrderDesc())
                 .totalPrice(orderDto.getTotalPrice())
                 .cart(

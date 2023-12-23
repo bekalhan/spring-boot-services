@@ -20,7 +20,7 @@ public class OrderItemDto implements Serializable {
 
     private Integer productId;
     private Integer orderId;
-    private Integer orderedQuantity;
+    //private Integer orderedQuantity;
 
     @JsonProperty("product")
     @JsonInclude(JsonInclude.Include.NON_NULL)

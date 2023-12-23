@@ -38,4 +38,17 @@ public class UserDto {
 
     @JsonProperty("credential")
     private CredentialsDto credentialDto;
+
+    /*
+    *     private Integer userId;
+    private String firstName;
+    private String lastName;
+    private String imageUrl;
+    private String email;
+    private String phone;
+
+    @JsonProperty("cart")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private CartDto cartDto;
+    * */
 }

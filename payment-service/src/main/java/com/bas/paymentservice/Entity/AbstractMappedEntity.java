@@ -29,10 +29,10 @@ import java.time.LocalDateTime;
 abstract public class AbstractMappedEntity {
     @CreatedDate
     @Column(name = "created_at" , updatable = false)
-    @JsonFormat(pattern = Constants.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
+    //@JsonFormat(pattern = Constants.LOCAL_DATE_FORMAT, shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdAt;
     @LastModifiedDate
     @Column(name = "updated_at")
-    @JsonFormat(pattern = Constants.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
+    //@JsonFormat(pattern = Constants.LOCAL_DATE_FORMAT, shape = JsonFormat.Shape.STRING)
     private LocalDateTime updatedAt;
 }

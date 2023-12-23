@@ -10,7 +10,7 @@ public class OrderItemMappingHelper {
         return OrderItemDto.builder()
                 .productId(orderItem.getProductId())
                 .orderId(orderItem.getOrderId())
-                .orderedQuantity(orderItem.getOrderedQuantity())
+                //.orderedQuantity(orderItem.getOrderedQuantity())
                 .productDto(
                         ProductDto.builder()
                                 .productId(orderItem.getProductId())
@@ -18,6 +18,7 @@ public class OrderItemMappingHelper {
                 .orderDto(
                         OrderDto.builder()
                                 .orderId(orderItem.getOrderId())
+                                //.productId(orderItem.getProductId())
                                 .build())
                 .build();
     }
@@ -26,7 +27,7 @@ public class OrderItemMappingHelper {
         return OrderItem.builder()
                 .productId(orderItemDto.getProductId())
                 .orderId(orderItemDto.getOrderId())
-                .orderedQuantity(orderItemDto.getOrderedQuantity())
+                //.orderedQuantity(orderItemDto.getOrderedQuantity())
                 .build();
     }
 }

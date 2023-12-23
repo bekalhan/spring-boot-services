@@ -25,8 +25,8 @@ public class OrderDto {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = AppConstant.LOCAL_DATE_FORMAT, shape = JsonFormat.Shape.STRING)
-    @DateTimeFormat(pattern =AppConstant.LOCAL_DATE_FORMAT)
+    @JsonFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
+    @DateTimeFormat(pattern =AppConstant.LOCAL_DATE_TIME_FORMAT)
     private LocalDateTime orderDate;
     private String orderDesc;
     private Double totalPrice;

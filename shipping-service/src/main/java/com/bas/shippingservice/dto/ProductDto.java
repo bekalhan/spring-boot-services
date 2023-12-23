@@ -17,10 +17,10 @@ public class ProductDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private Integer productId;
-    private String productTitle;
+    private String title;
     private String imageUrl;
     private String sku;
-    private Double priceUnit;
+    private Double price;
     private Integer quantity;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -26,8 +26,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
 
-
-
     @Override
     public OrderDto findById(Integer orderId) {
 
@@ -39,9 +37,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> findAll() {
-
-
-
 
        return this.orderRepository.findAll()
                 .stream()
