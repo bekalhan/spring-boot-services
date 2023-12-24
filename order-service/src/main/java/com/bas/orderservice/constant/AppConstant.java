@@ -15,7 +15,7 @@ public abstract class AppConstant {
     public abstract class DiscoveredDomainsApi {
 
         public static final String USER_SERVICE_HOST = "http://localhost:8700/user-service";
-        public static final String USER_SERVICE_API_URL = "http://localhost:8700/api/users";
+        public static final String USER_SERVICE_API_URL = "http://USER-SERVICE/api/users";
     }
 
 

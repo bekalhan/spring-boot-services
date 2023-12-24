@@ -8,7 +8,6 @@ import com.bas.userservice.helper.UserMapperHelper;
 import com.bas.userservice.repository.UserRepository;
 import com.bas.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ResourceClosedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

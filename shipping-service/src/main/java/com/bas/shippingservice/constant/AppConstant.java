@@ -16,10 +16,10 @@ public class AppConstant {
         public static final String USER_SERVICE_API_URL = "http://localhost:8700/api/users";
 
         public static final String PRODUCT_SERVICE_HOST = "http://localhost:8500/api/products";
-        public static final String PRODUCT_SERVICE_API_URL = "http://localhost:8500/api/products";
+        public static final String PRODUCT_SERVICE_API_URL = "http://PRODUCT-SERVICE/api/products";
 
         public static final String ORDER_SERVICE_HOST = "http://localhost:8600/api/orders";
-        public static final String ORDER_SERVICE_API_URL = "http://localhost:8600/api/orders";
+        public static final String ORDER_SERVICE_API_URL = "http://ORDER-SERVICE/api/orders";
 
         public static final String FAVOURITE_SERVICE_HOST = "http://favouriteservice/favouriteservice";
         public static final String FAVOURITE_SERVICE_API_URL = "http://favouriteservice/favouriteservice/api/favourites";
