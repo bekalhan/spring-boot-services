@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-
 public class FavouriteServiceImpl implements FavouriteService {
 
     FavouriteRepository favouriteRepository;

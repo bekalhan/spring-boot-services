@@ -1,16 +1,5 @@
-server:
-  port: 8600
 spring:
   application:
-    name: "order"
-  datasource:
-    url: jdbc:mysql://localhost:3306/orderdb
-    username: root
-    password: root07
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  sql:
-    init:
-      mode: always
+    name: "order-service"
+  config:
+    import: optional:configserver:http://localhost:8888

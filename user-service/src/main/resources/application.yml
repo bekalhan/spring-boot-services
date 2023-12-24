@@ -1,16 +1,10 @@
-server:
-  port: 8700
 spring:
   application:
-    name: "users"
-  datasource:
-    url: jdbc:mysql://localhost:3306/userdb
-    username: root
-    password: root07
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  sql:
-    init:
-      mode: always
+    name: "user-service"
+  config:
+    import: optional:configserver:http://localhost:8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,16 +1,5 @@
-server:
-  port: 8500
 spring:
   application:
-    name: "products"
-  datasource:
-    url: jdbc:mysql://localhost:3306/productsdb
-    username: root
-    password: root07
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-  sql:
-    init:
-      mode: always
+    name: "product-service"
+  config:
+    import: optional:configserver:http://localhost:8888

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: CONFIG-SERVER
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/bekalhan/kalhan-config.git
+          username: bekalhan
+          password: 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
+          clone-on-start: true
+          default-label: main
+server:
+  port: 8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
