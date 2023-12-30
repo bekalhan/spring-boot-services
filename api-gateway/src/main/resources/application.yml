@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/products/**
+        - id: FAVOURITE-SERVICE
+          uri: lb://FAVOURITE-SERVICE
+          predicates:
+            - Path=/api/favourites/**
+        - id: ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/api/orders/**
+        - id: PAYMENT-SERVICE
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/payments/**
+        - id: SHIPPING-SERVICE
+          uri: lb://SHIPPING-SERVICE
+          predicates:
+            - Path=/api/shippings/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/users/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+eureka:
+  instance:
+    client:
+      registerWithEureka: true
+      fetchRegistry: true
+      serverUrl:
+        defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 9191
