@@ -27,68 +27,29 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping
-    public ResponseEntity<DtoCollectionResponse<OrderDto>> findAll() {
-        return ResponseEntity.ok(new DtoCollectionResponse<>(this.orderService.findAll()));
+    @GetMapping("test")
+    public ResponseEntity<String>test(){
+        return new ResponseEntity<>("orderController", HttpStatus.OK);
     }
 
-    @GetMapping("/params")
-    public ResponseEntity<OrderResponse> findAll(
-            @RequestParam(value="pageNo",defaultValue = PageableConstants.DEFAULT_PAGE_NUMBER,required = false) int pageNo,
-            @RequestParam(value="pageSize",defaultValue = PageableConstants.DEFAULT_PAGE_SIZE,required = false) int pageSize,
-            @RequestParam(value="sortBy",defaultValue = PageableConstants.DEFAULT_SORT_BY,required = false) String sortBy,
-            @RequestParam(value="sortDir",defaultValue = PageableConstants.DEFAULT_SORT_DIRECTION,required = false) String sortDir
-    ) {
-        var allProducts = orderService.getAllProductsWithPageableAndSorting(pageNo,pageSize,sortBy,sortDir);
-        return ResponseEntity.status(HttpStatus.OK).body(allProducts);
+    @PostMapping("book")
+    public ResponseEntity<Long>bookOrder(@RequestBody OrderDTO orderDTO) throws ProductNotFound {
+        return new ResponseEntity<>(orderService.bookOrder(orderDTO),HttpStatus.CREATED);
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto> findById(@PathVariable("orderId")
-
-                                             @Validated final Integer orderId) {
-
-        log.info("OrderDto, resource; fetch order by id");
-        return ResponseEntity.ok(this.orderService.findById(orderId));
+    @PutMapping("cancel")
+    public ResponseEntity<String>cancelOrder(@RequestParam Long orderId){
+        return new ResponseEntity<>(orderService.cancelOrder(orderId),HttpStatus.OK);
     }
 
-    @PostMapping
-
-    public ResponseEntity<OrderDto> save(
-                                         @RequestBody
-                                         @Validated final OrderDto orderDto) {
-
-            return ResponseEntity.ok(this.orderService.save(orderDto));
-
-
+    @PostMapping("allOrders")
+    public ResponseEntity<List<Order>>viewOrders(@RequestBody List<Long>orderIds){
+        return new ResponseEntity<>(orderService.viewOrders(orderIds),HttpStatus.OK);
     }
 
-
-
-
-    @PutMapping
-    public ResponseEntity<OrderDto> update(@RequestBody
-
-                                           @Validated final OrderDto orderDto) {
-        return ResponseEntity.ok(this.orderService.update(orderDto));
+    @PostMapping("order")
+    public ResponseEntity<List<Order>>viewOrderByStatus(@RequestBody List<Long>orderIds,@RequestParam String status){
+        return new ResponseEntity<>(orderService.viewOrderByStatus(orderIds,status),HttpStatus.OK);
     }
 
-    @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDto> update(
-                                           @PathVariable("orderId")
-                                           @Validated final Integer orderId,
-                                           @RequestBody
-                                           @Validated final OrderDto orderDto) {
-
-
-            return ResponseEntity.ok(this.orderService.update(orderId, orderDto));
-
-    }
-
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable("orderId") final Integer orderId) {
-
-        this.orderService.deleteById(orderId);
-        return ResponseEntity.ok(true);
-    }
 }

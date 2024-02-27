@@ -1,6 +1,6 @@
 package com.bas.userservice.controller;
 
-import com.bas.userservice.dto.UserDto;
+import com.bas.userservice.dto.UserDTO;
 import com.bas.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,32 +17,32 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers(){
-        List<UserDto> allUsers = userService.findAll();
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
+        List<UserDTO> allUsers = userService.findAll();
         return  ResponseEntity.status(HttpStatus.OK).body(allUsers);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable(value = "userId") Integer userId){
-        UserDto user = userService.findById(userId);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "userId") Integer userId){
+        UserDTO user = userService.findById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> save(@RequestBody @Valid  UserDto userDto){
-        UserDto user = userService.save(userDto);
+    public ResponseEntity<UserDTO> save(@RequestBody @Valid UserDTO userDto){
+        UserDTO user = userService.save(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PutMapping
-    public ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto){
-        UserDto user = userService.update(userDto);
+    public ResponseEntity<UserDTO> update(@Valid @RequestBody UserDTO userDto){
+        UserDTO user = userService.update(userDto);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto,@PathVariable(value="userId") Integer userId){
-        UserDto user = userService.update(userId,userDto);
+    public ResponseEntity<UserDTO> update(@Valid @RequestBody UserDTO userDto, @PathVariable(value="userId") Integer userId){
+        UserDTO user = userService.update(userId,userDto);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<UserDto> findByUsername(@PathVariable(value = "username") String username){
+    public ResponseEntity<UserDTO> findByUsername(@PathVariable(value = "username") String username){
         return ResponseEntity.ok(this.userService.findByUsername(username));
     }
 }

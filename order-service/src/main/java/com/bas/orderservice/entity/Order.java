@@ -26,23 +26,10 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id",unique = true,nullable = false,updatable = false)
-    Integer orderId;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,shape = JsonFormat.Shape.STRING)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT)
-    LocalDateTime orderDate;
-
-    @Column(name = "order_desc")
-    private String orderDesc;
-    @Column(name = "total_price")
-    Double totalPrice;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cart_id")
-    Cart cart;
+    private Long orderId;
+    private String productName;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 
 }
