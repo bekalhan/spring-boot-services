@@ -1,17 +1,15 @@
 package com.bas.productservice.service;
 
-import com.bas.productservice.dto.ProductDto;
-import com.bas.productservice.response.ProductResponse;
+import com.bas.productservice.dto.ProductDTO;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductResponse getAllProductsWithPageableAndSorting(int pageNo, int pageSize, String sortBy, String sortDir);
-    List<ProductDto> getAllProducts();
+    List<ProductDTO> showAllProducts();
 
-    ProductDto getProductById(final Long productId);
-    ProductDto createProduct(final ProductDto productDto);
-    ProductDto patchProduct(Long productId, ProductDto productDto);
+    ProductDTO findProductByName(String name);
 
-    void deleteProduct(final Long productId);
+    String addProduct(ProductDTO productDTO);
+
+    String deleteProduct(String name);
 }

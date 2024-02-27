@@ -1,74 +1,64 @@
 package com.authservice.authservice.config;
 
-import com.authservice.authservice.entity.User;
-import com.authservice.authservice.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.function.Function;
+import static com.authservice.authservice.enumPackage.Permission.*;
+import static com.authservice.authservice.enumPackage.Role.ADMIN;
+import static com.authservice.authservice.enumPackage.Role.MANAGER;
 
-@Service
+@Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
-public class JwtService {
+@EnableMethodSecurity
+public class SecurityConfiguration {
 
-    private final UserRepository userRepo;
-    @Value("${application.security.jwt.key}")
-    private  String secretKey;
+    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
 
-    @Value("${application.security.jwt.expiration}")
-    private  Long expiration;
+    private final LogoutHandler logoutHandler;
 
-    public String generateToken(User user){
-        HashMap<String,Object> claims=new HashMap<>();
-        return Jwts.builder()
-                .claims(claims)
-                .subject(user.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+expiration))
-                .signWith(signinKey(secretKey))
-                .compact();
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/auth/**")
+                .permitAll()
+                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(),MANAGER.name())
+                .requestMatchers(HttpMethod.GET,"/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(),MANAGER_READ.name())
+                .requestMatchers(HttpMethod.POST,"/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(),MANAGER_CREATE.name())
+                .requestMatchers(HttpMethod.PUT,"/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(),MANAGER_UPDATE.name())
+                .requestMatchers(HttpMethod.DELETE,"/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(),MANAGER_DELETE.name())
+                /*.requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
+                .requestMatchers(HttpMethod.GET,"/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name())
+                .requestMatchers(HttpMethod.POST,"/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name())
+                .requestMatchers(HttpMethod.PUT,"/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name())
+                .requestMatchers(HttpMethod.DELETE,"/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name())*/
+                .anyRequest()
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout.logoutUrl("/api/v1/auth/logout")
+                                .addLogoutHandler(logoutHandler)
+                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                );
+        return http.build();
     }
-
-    public Key signinKey(String secretKey){
-        byte[]keyBytes= Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
-    public boolean validateToken(User user,String jwt){
-        String username=extractUsername(jwt);
-        return username.equals(user.getUsername());
-    }
-
-    public Claims extractClaims(String jwt){
-        return Jwts.parser()
-                .setSigningKey(signinKey(secretKey))
-                .build()
-                .parseSignedClaims(jwt)
-                .getPayload();
-    }
-
-    public <T> T extractClaim(String jwt, Function<Claims,T> claimResolver){
-        Claims claims=extractClaims(jwt);
-        return claimResolver.apply(claims);
-    }
-
-    public String extractUsername(String jwt){
-        return extractClaim(jwt,Claims::getSubject);
-    }
-
-   /* public User validateToken(String jwt){
-        String username=extractUsername(jwt);
-        Optional<User> user = userRepo.findByUsername(username);
-        if(username.equals(user.get().getUsername()))return user.get();
-        else throw new RuntimeException("user not found");
-    }*/
 }

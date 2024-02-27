@@ -1,80 +1,77 @@
 package com.bas.userservice.service.impl;
 
-import com.bas.userservice.dto.UserDto;
+import com.bas.userservice.dto.CardDTO;
+import com.bas.userservice.dto.UserDTO;
+import com.bas.userservice.entity.Address;
+import com.bas.userservice.entity.Card;
 import com.bas.userservice.entity.User;
-import com.bas.userservice.exception.ResourceAlreadyExistException;
-import com.bas.userservice.exception.ResourceNotFoundException;
-import com.bas.userservice.helper.UserMapperHelper;
+import com.bas.userservice.exception.InvalidActionException;
 import com.bas.userservice.repository.UserRepository;
 import com.bas.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
 
+
     @Override
-    public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(UserMapperHelper::map)
-                .distinct()
-                .collect(Collectors.toList());
+    public String addUserDetails(UserDTO userDTO, String username) {
+        //fetch username from atuh service
+        log.info("current logged in user is "+username);
+
+        // her bir address dtoyu address entitysine çevir user'a ait
+        List<Address>addressList=userDTO.getAddressDTOList().stream().map((addressDTO)->{
+            return Address.builder()
+                    .name(addressDTO.getName())
+                    .phNo(addressDTO.getPhNo())
+                    .state(addressDTO.getState())
+                    .city(addressDTO.getCity())
+                    .pinCode(addressDTO.getPinCode())
+                    .addressType(addressDTO.getAddressType())
+                    .build();
+        }).toList();
+
+        List<Card>cardList=userDTO.getCardDTOList().stream().map((cardDTO)-> Card.builder()
+                .cardNumber(cardDTO.getCardNumber())
+                .nameOnCard(cardDTO.getNameOnCard())
+                .build()).toList();
+
+        User user=User.builder()
+                .username(username)
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .phNo(userDTO.getPhNo())
+                .addressList(addressList)
+                .cardList(cardList)
+                .build();
+
+        userRepository.save(user);
+        return "User Details added successfully";
     }
 
     @Override
-    public UserDto findById(Integer userId) {
-        return this.userRepository.findById(userId)
-                .map(UserMapperHelper::map)
-                .orElseThrow(()-> new ResourceNotFoundException("User","id",userId));
+    public String addCard(CardDTO cardDTO, String username) {
+        userRepository.findByUsername(username).
+                orElseThrow(()->new InvalidActionException("Provide your details in the profile section to perform this action"));
 
-    }
-
-    @Override
-    public UserDto save(UserDto userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail());
-
-        if(user != null){
-            throw new ResourceAlreadyExistException("User","email",user.getEmail());
-        }
-
-        return UserMapperHelper.map(this.userRepository.save(UserMapperHelper.map(userDto)));
-    }
-
-    @Override
-    public UserDto update(UserDto userDto) {
-        return UserMapperHelper.map(this.userRepository.save(UserMapperHelper.map(userDto)));
-    }
-
-    @Override
-    public UserDto update(Integer userId, UserDto userDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new ResourceNotFoundException("User","id",userId));
-
-        User mapToUser = UserMapperHelper.map(userDto);
-        User updatedUser = userRepository.save(mapToUser);
-
-        return UserMapperHelper.map(updatedUser);
-
-    }
-
-    @Override
-    public void deleteById(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
-
-        this.userRepository.deleteById(userId);
-    }
-
-    @Override
-    public UserDto findByUsername(String username) {
-        return UserMapperHelper.map(this.userRepository.findByCredentialUsername(username)
-                .orElseThrow(()-> new ResourceNotFoundException("User","name",username)));
+        Optional<User> user=userRepository.findByUsername(username);
+        List<Card>cardList=user.get().getCardList();
+        cardList.add(Card.builder()
+                .cardNumber(cardDTO.getCardNumber())
+                .nameOnCard(cardDTO.getNameOnCard())
+                .build());
+        user.get().setCardList(cardList);
+        userRepository.save(user.get());
+        return "Card Details added successfully";
     }
 }

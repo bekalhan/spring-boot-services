@@ -1,15 +1,11 @@
 package com.bas.userservice.service;
 
-import com.bas.userservice.dto.UserDto;
+import com.bas.userservice.dto.CardDTO;
+import com.bas.userservice.dto.UserDTO;
 
 import java.util.List;
 
 public interface UserService {
-    List<UserDto> findAll();
-    UserDto findById(final Integer userId);
-    UserDto save(final UserDto userDto);
-    UserDto update(final UserDto userDto);
-    UserDto update(final Integer userId,final UserDto userDto);
-    void deleteById(final Integer userId);
-    UserDto findByUsername(final String username);
+    String addUserDetails(UserDTO userDTO,String username);
+    String addCard(CardDTO cardDTO,String username);
 }

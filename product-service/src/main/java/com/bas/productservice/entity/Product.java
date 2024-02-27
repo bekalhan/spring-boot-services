@@ -12,25 +12,13 @@ import java.io.Serializable;
 @EqualsAndHashCode(exclude = {"category"})
 @Data
 @Builder
-public class Product extends BaseEntity {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", unique = true)
     private Long productId;
-
-    private String title;
-
-    private String imageUrl;
-
-    private String sku;
-
-    private Double price;
-
-    private Integer quantity;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="category_id")
-    private Category category;
+    private String name;
+    private Long price;
+    private String description;
 
 }

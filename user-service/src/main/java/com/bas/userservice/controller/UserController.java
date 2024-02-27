@@ -16,7 +16,15 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping
+    public String testMethod(@RequestHeader("currUser") String user){
+        return "hello "+user;
+    }
+    @PostMapping("addUser")
+    public ResponseEntity<String>addUserDetails(@RequestBody @Valid UserDTO userDTO,@RequestHeader("currUser") String username){
+        return new ResponseEntity<>(userService.addUserDetails(userDTO,username), HttpStatus.CREATED);
+    }
+
+   /* @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         List<UserDTO> allUsers = userService.findAll();
         return  ResponseEntity.status(HttpStatus.OK).body(allUsers);
@@ -55,5 +63,5 @@ public class UserController {
     @GetMapping("/username/{username}")
     public ResponseEntity<UserDTO> findByUsername(@PathVariable(value = "username") String username){
         return ResponseEntity.ok(this.userService.findByUsername(username));
-    }
+    }*/
 }

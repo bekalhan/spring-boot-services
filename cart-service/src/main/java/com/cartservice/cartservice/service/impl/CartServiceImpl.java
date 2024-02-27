@@ -1,8 +1,9 @@
-package com.cartservice.cartservice.service;
+package com.cartservice.cartservice.service.impl;
 
 import com.cartservice.cartservice.dto.CartDTO;
 import com.cartservice.cartservice.entity.Cart;
 import com.cartservice.cartservice.repository.CartRepository;
+import com.cartservice.cartservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CartServiceImpl {
+public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepo;
 

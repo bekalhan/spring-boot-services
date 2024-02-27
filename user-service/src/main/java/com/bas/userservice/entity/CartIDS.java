@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CardIDS {
+public class CartIDS {
     @Id
     private Long CartId;
     private String username;

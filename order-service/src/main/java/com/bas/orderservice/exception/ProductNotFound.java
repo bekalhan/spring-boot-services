@@ -1,4 +1,4 @@
-package com.bas.productservice.exception;
+package com.bas.orderservice.exception;
 
 public class ProductNotFound extends RuntimeException{
 

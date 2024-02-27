@@ -1,54 +1,35 @@
 package com.bas.userservice.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
 @Builder
-@Getter
-@Setter
-public class UserDto {
-    private Integer userId;
+public class UserDTO {
 
-    @NotEmpty(message="Please provide valid first name")
+    @NotNull(message = "FirstName cannot be empty")
+    @Pattern(regexp = "^[A-Za-z]{2,30}$",message = "Please provide valid firstName")
     private String firstName;
-    @NotEmpty(message="Please provide valid last name")
+
+    @NotNull(message = "LastName cannot be empty")
+    @Pattern(regexp = "^[A-Za-z]{2,30}$",message = "Please provide valid lastName")
     private String lastName;
 
-    private String imageUrl;
-//    @NotEmpty(message = "title should not be null or empty")
-    @Email(message="Please provide valid email")
-    private String email;
-    @Pattern(regexp = "[+]\\d{10}", message = "Please provide valid phone number")
-    private String phone;
+    @NotNull(message = "Phone number cannot be empty")
+    @Pattern(regexp = "^\\+91-[1-9]\\d{9}$",message = "Please provide valid phone number")
+    private String phNo;
 
-    //@JsonProperty("addresses")  // JsonProperty ekledik
-    private Set<AddressDto> addressDtos = new HashSet<>();
+    @Valid
+    private List<AddressDTO> addressDTOList;
 
-    @JsonProperty("credential")
-    private CredentialsDto credentialDto;
-
-    /*
-    *     private Integer userId;
-    private String firstName;
-    private String lastName;
-    private String imageUrl;
-    private String email;
-    private String phone;
-
-    @JsonProperty("cart")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private CartDto cartDto;
-    * */
+    @Valid
+    private List<CardDTO>cardDTOList;
 }

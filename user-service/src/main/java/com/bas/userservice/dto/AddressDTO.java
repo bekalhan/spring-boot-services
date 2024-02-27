@@ -1,28 +1,39 @@
 package com.bas.userservice.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.bas.userservice.entity.AddressType;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class AddressDto {
+public class AddressDTO {
 
-    private Integer addressId;
+    @NotNull(message = "Name cannot be empty")
+    @Pattern(regexp = "^[A-Za-z]{2,30}$",message = "Please provide valid name")
+    private String name;
 
-    @NotEmpty(message="Please provide valid address")
-    private String fullAddress;
+    @NotNull(message = "Phone number cannot be empty")
+    @Pattern(regexp = "^\\+91-[1-9]\\d{9}$",message = "Please provide valid phone number")
+    private String phNo;
 
-    @NotEmpty(message="Please provide valid postal code")
-    private String postalCode;
+    @NotNull(message = "PinCode cannot be empty")
+    @Pattern(regexp = "^\\d{6}$",message = "Please provide valid pinCode")
+    private String pinCode;
 
-    @NotEmpty(message="Please provide valid city")
+    @NotNull(message = "State cannot be empty")
+    @Pattern(regexp = "^[A-Za-z]{2,30}$",message = "Please provide valid state")
+    private String state;
+
+    @NotNull(message = "City cannot be empty")
+    @Pattern(regexp = "^[A-Za-z]{2,30}$",message = "Please provide valid city")
     private String city;
 
-    //@JsonProperty("user")
-    //@JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private Integer userId;
+    @Valid
+    @NotNull(message = "Address type cannot be empty")
+    private AddressType addressType;
 }

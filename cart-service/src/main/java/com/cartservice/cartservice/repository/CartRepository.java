@@ -1,2 +1,10 @@
-package com.cartservice.cartservice.repository;public interface CartRepository {
+package com.cartservice.cartservice.repository;
+
+import com.cartservice.cartservice.entity.Cart;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface CartRepository extends JpaRepository<Cart,Long> {
+    Optional<Cart>findByProductName(String name);
 }

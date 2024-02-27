@@ -1,20 +1,16 @@
 package com.bas.orderservice.controller;
 
-import com.bas.orderservice.constant.PageableConstants;
-import com.bas.orderservice.dto.OrderDto;
-import com.bas.orderservice.dto.OrderResponse;
-import com.bas.orderservice.dto.reponse.DtoCollectionResponse;
+import com.bas.orderservice.dto.OrderDTO;
 import com.bas.orderservice.entity.Order;
+import com.bas.orderservice.exception.ProductNotFound;
+import com.bas.orderservice.feign.ProductFeign;
 import com.bas.orderservice.service.OrderService;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +22,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final ProductFeign productFeign;
 
     @GetMapping("test")
     public ResponseEntity<String>test(){

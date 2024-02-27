@@ -1,2 +1,5 @@
-package com.authservice.authservice.enumPackage;public enum TokenType {
+package com.authservice.authservice.enumPackage;
+
+public enum TokenType {
+    BEARER
 }

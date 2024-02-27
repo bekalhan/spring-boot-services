@@ -3,34 +3,35 @@ spring:
     name: API-GATEWAY
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: false
       routes:
-        - id: PRODUCT-SERVICE
-          uri: lb://PRODUCT-SERVICE
-          predicates:
-            - Path=/api/products/**
-        - id: FAVOURITE-SERVICE
-          uri: lb://FAVOURITE-SERVICE
-          predicates:
-            - Path=/api/favourites/**
-        - id: ORDER-SERVICE
-          uri: lb://ORDER-SERVICE
-          predicates:
-            - Path=/api/orders/**
-        - id: PAYMENT-SERVICE
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Path=/api/payments/**
-        - id: SHIPPING-SERVICE
-          uri: lb://SHIPPING-SERVICE
-          predicates:
-            - Path=/api/shippings/**
-        - id: USER-SERVICE
+        - id: user
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/api/users/**
+            - Path=/user/**
+          filters:
+            - AuthenticationFilter
+        - id: auth
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/**
+        - id: order
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/**
+          filters:
+            - AuthenticationFilter
+        - id: product
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/product/**
+          filters:
+            - AuthenticationFilter
+        - id: cart
+          uri: lb://CART-SERVICE
+          predicates:
+            - Path=/cart/**
+          filters:
+            - AuthenticationFilter
 
 management:
   endpoints:
@@ -54,3 +55,6 @@ eureka:
 
 server:
   port: 9191
+
+  main:
+    allow-circular-references: true

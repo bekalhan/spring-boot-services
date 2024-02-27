@@ -1,2 +1,17 @@
-package com.bas.userservice.dto;public class Cart {
+package com.bas.userservice.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class Cart {
+
+    private Long cartId;
+    private String productName;
+
 }
