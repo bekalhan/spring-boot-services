@@ -9,6 +9,7 @@ import com.authservice.authservice.service.AuthenticationService;
 import com.authservice.authservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,32 +24,17 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
 
-  /*  @PostMapping("/register")
-    public ResponseEntity<?> register(
-            @RequestBody RegisterRequest request
-    ){
-        var response = authenticationService.register(request);
-        if(request.getMfaEnabled()){
-            return ResponseEntity.ok(request);
-
-        }
-        return ResponseEntity.accepted().build();
-
-    }*/
-
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
+            @Valid @RequestBody RegisterRequest request
     ){
-        System.out.println("register"+request);
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
+            @Valid @RequestBody AuthenticationRequest request
     ){
-        System.out.println("authenticate"+request);
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 

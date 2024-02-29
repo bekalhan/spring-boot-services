@@ -29,7 +29,7 @@ spring:
         - id: cart
           uri: lb://CART-SERVICE
           predicates:
-            - Path=/cart/**
+            - Path=/**
           filters:
             - AuthenticationFilter
 

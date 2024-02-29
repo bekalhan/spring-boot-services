@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("cart/action")
+@RequestMapping("cart/action/")
 @RequiredArgsConstructor
 public class CartController {
 

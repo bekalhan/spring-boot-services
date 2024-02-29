@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,6 +40,10 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(RegisterRequest request){
+        if(userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new DataIntegrityViolationException("A user with this email already exists");
+        }
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -46,7 +51,6 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
-
         User savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -58,23 +62,13 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        System.out.println("aaaa"+request);
-        var rr =                 new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
-                request.getPassword()
-        );
-        System.out.println("rr"+rr);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword());
+
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
+                usernamePasswordAuthenticationToken
         );
-        System.out.println("bbb");
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        System.out.println("user"+user);
         var jwtToken = jwtService.generateToken(user);
-        System.out.println("jwt"+jwtToken);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user,jwtToken);
