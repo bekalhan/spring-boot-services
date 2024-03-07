@@ -1,5 +1,6 @@
 package com.authservice.authservice.controller;
 
+import com.authservice.authservice.dto.AuthenticationDTO;
 import com.authservice.authservice.entity.User;
 import com.authservice.authservice.request.AuthenticationRequest;
 import com.authservice.authservice.request.RegisterRequest;
@@ -54,9 +55,11 @@ public class AuthenticationController {
     }
 
     @GetMapping("validateTkn")
-    public User validateToken(@RequestParam String jwt){
-        System.out.println("here"+jwt);
-        return jwtService.validateToken(jwt);
+    public AuthenticationDTO validateToken(@RequestParam String jwt){
+        var username = jwtService.extractUsername(jwt);
+        AuthenticationDTO user = authenticationService.findUserByUsername(username);
+        System.out.println("user");
+        return user;
     }
 
 }

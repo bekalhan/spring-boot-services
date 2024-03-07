@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private Integer id;
     private String firstname;
     private String lastname;
-    private String email;
+    private String username;
     private String password;
     private Boolean mfaEnabled;
     private String secret;
@@ -51,7 +51,7 @@ public class User implements UserDetails {
     //benzersiz kimliğini sağlar
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     //kullanıcının hesabının süresinin dolup dolmadığını söyler

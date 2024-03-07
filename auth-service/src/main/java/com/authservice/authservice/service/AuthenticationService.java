@@ -1,8 +1,11 @@
 package com.authservice.authservice.service;
 
+import com.authservice.authservice.dto.AuthenticationDTO;
+import com.authservice.authservice.dto.UserDTO;
 import com.authservice.authservice.entity.Token;
 import com.authservice.authservice.entity.User;
 import com.authservice.authservice.enumPackage.TokenType;
+import com.authservice.authservice.exception.ResourceNotFoundException;
 import com.authservice.authservice.repository.TokenRepository;
 import com.authservice.authservice.repository.UserRepository;
 import com.authservice.authservice.request.AuthenticationRequest;
@@ -23,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,14 +44,14 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(RegisterRequest request){
-        if(userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if(userRepository.findByUsername(request.getEmail()).isPresent()) {
             throw new DataIntegrityViolationException("A user with this email already exists");
         }
 
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
-                .email(request.getEmail())
+                .username(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
@@ -67,7 +71,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 usernamePasswordAuthenticationToken
         );
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var user = userRepository.findByUsername(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -111,7 +115,7 @@ public class AuthenticationService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
-            var user = this.userRepository.findByEmail(userEmail)
+            var user = this.userRepository.findByUsername(userEmail)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
@@ -129,7 +133,7 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse verifyCode(VerificationRequest verificationRequest) {
-        User user = userRepository.findByEmail(verificationRequest.getEmail())
+        User user = userRepository.findByUsername(verificationRequest.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException(String.format("no user found %s"+verificationRequest.getEmail())));
 
         var jwtToken = jwtService.generateToken(user);
@@ -141,6 +145,12 @@ public class AuthenticationService {
                 .mfaEnabled(user.getMfaEnabled())
                 .build()
                 ;
+    }
+
+    public AuthenticationDTO findUserByUsername(String username){
+        UserDTO userDTO = userRepository.findByUsernameAndField(username);
+        AuthenticationDTO authenticationDTO = userRepository.findTokenByUserid(userDTO.getId());
+        return authenticationDTO;
     }
 
 }

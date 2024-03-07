@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -97,12 +98,9 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public User validateToken(String jwt){
+    public String validateToken(String jwt){
         String username=extractUsername(jwt);
-        System.out.println("username"+username);
-        Optional<User> user=userRepository.findByEmail(username);
-        System.out.println("user"+user);
-        if(username.equals(user.get().getUsername()))return user.get();
-        else throw new RuntimeException("user not found");
+        if(!username.isEmpty()) return username;
+        else throw new EntityNotFoundException("User not found!");
     }
 }
