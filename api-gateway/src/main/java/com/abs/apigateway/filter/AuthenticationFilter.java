@@ -77,12 +77,13 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
                 }
+
                 try {
-                    restTemplate.getForObject("http://AUTH-SERVICE/auth/validateTkn?jwt=" + authHeader, UserDTO.class);
+                     restTemplate.getForObject("http://localhost:8081/auth/validateTkn?jwt=" + authHeader, UserDTO.class);
+
                 } catch (Exception e) {
-                    System.out.println("invalid access...!");
+                    throw new UnAuthorizedException("Unauthorized access to application");
                     //throw new RuntimeException("un authorized access to application");
-                    throw new UnAuthorizedException("you have no access to this route");
                 }
             }
             return chain.filter(exchange);

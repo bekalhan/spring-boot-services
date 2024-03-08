@@ -24,16 +24,16 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     UserDTO findByUsernameAndField(@Param("username") String username);
 
     @Query("""
-    SELECT new com.authservice.authservice.dto.AuthenticationDTO(
-        US.username,
-        US.password,
-        TK.token
-    )
-    FROM Token TK
-    JOIN TK.user US
-    WHERE US.id = :id
-    AND TK.expired = false
-""")
-    AuthenticationDTO findTokenByUserid(@Param("id") Integer id);
+        SELECT new com.authservice.authservice.dto.AuthenticationDTO(
+            US.username,
+            US.password,
+            TK.token
+        )
+        FROM Token TK
+        JOIN TK.user US
+        WHERE US.id = :id
+        AND (TK.token = :token AND TK.expired = false)
+    """)
+    AuthenticationDTO findTokenByUserid(@Param("id") Integer id, @Param("token") String token);
 
 }

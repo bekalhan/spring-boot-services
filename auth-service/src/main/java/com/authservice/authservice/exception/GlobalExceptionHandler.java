@@ -27,6 +27,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<ErrorDetails> handleUnAuthorizedException(UnAuthorizedException exception,
+                                                                    WebRequest webRequest){
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), "you have no access to this route",
+                webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
+
     // global exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,

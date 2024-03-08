@@ -6,6 +6,7 @@ import com.authservice.authservice.entity.Token;
 import com.authservice.authservice.entity.User;
 import com.authservice.authservice.enumPackage.TokenType;
 import com.authservice.authservice.exception.ResourceNotFoundException;
+import com.authservice.authservice.exception.UnAuthorizedException;
 import com.authservice.authservice.repository.TokenRepository;
 import com.authservice.authservice.repository.UserRepository;
 import com.authservice.authservice.request.AuthenticationRequest;
@@ -147,9 +148,19 @@ public class AuthenticationService {
                 ;
     }
 
-    public AuthenticationDTO findUserByUsername(String username){
+    public AuthenticationDTO findUserByUsername(String username,String token){
         UserDTO userDTO = userRepository.findByUsernameAndField(username);
-        AuthenticationDTO authenticationDTO = userRepository.findTokenByUserid(userDTO.getId());
+
+        if (userDTO == null) {
+            throw new UnAuthorizedException("User not found");
+        }
+
+        AuthenticationDTO authenticationDTO = userRepository.findTokenByUserid(userDTO.getId(), token);
+
+        if (authenticationDTO == null || authenticationDTO.getToken() == null || authenticationDTO.getUsername() == null || authenticationDTO.getPassword() == null) {
+            throw new UnAuthorizedException("You have no access to this route");
+        }
+
         return authenticationDTO;
     }
 

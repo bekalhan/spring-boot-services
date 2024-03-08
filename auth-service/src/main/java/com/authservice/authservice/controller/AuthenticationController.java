@@ -57,8 +57,7 @@ public class AuthenticationController {
     @GetMapping("validateTkn")
     public AuthenticationDTO validateToken(@RequestParam String jwt){
         var username = jwtService.extractUsername(jwt);
-        AuthenticationDTO user = authenticationService.findUserByUsername(username);
-        System.out.println("user");
+        AuthenticationDTO user = authenticationService.findUserByUsername(username,jwt);
         return user;
     }
 
