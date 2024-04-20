@@ -7,13 +7,13 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Table(name="categories")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude = {"subCategories", "parentCategory", "products"})
 @Data
 @Builder
+@Entity
 public class Category extends BaseEntity {
 
     @Id
@@ -22,8 +22,6 @@ public class Category extends BaseEntity {
     private Long categoryId;
 
     private String title;
-
-    private String imageUrl;
 
     @JsonIgnore
     @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

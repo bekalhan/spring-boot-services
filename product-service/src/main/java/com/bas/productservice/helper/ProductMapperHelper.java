@@ -1,7 +1,9 @@
 package com.bas.productservice.helper;
 
 import com.bas.productservice.dto.CategoryDto;
+import com.bas.productservice.dto.CategoryRequest;
 import com.bas.productservice.dto.ProductDTO;
+import com.bas.productservice.dto.ProductRequest;
 import com.bas.productservice.entity.Category;
 import com.bas.productservice.entity.Product;
 import com.bas.productservice.response.ProductResponse;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class ProductMapperHelper {
     public static ProductDTO map(final Product product) {
+
         return ProductDTO.builder()
                 .productId(product.getProductId())
                 .name(product.getName())
@@ -23,13 +26,16 @@ public class ProductMapperHelper {
                         CategoryDto.builder()
                                 .categoryId(product.getCategory().getCategoryId())
                                 .title(product.getCategory().getTitle())
-                                .imageUrl(product.getCategory().getImageUrl())
                                 .build())
                 .description(product.getDescription())
+                .dynamicFields(product.getDynamicFields())
+                .subCategoryId(product.getSubCategoryId())
+                .brand(product.getBrand())
+                .color(product.getColor())
                 .build();
     }
 
-    public static Product map(final ProductDTO productDto) {
+    public static Product map(final ProductRequest productDto,Category category) {
         return Product.builder()
                 .productId(productDto.getProductId())
                 .name(productDto.getName())
@@ -37,13 +43,16 @@ public class ProductMapperHelper {
                 .price(productDto.getPrice())
                 .quantity(productDto.getQuantity())
                 .description(productDto.getDescription())
-                //.category(category)//? is it good approach, test it.!
                 .category(
                         Category.builder()
-                                .categoryId(productDto.getCategoryDto().getCategoryId())
-                                .title(productDto.getCategoryDto().getTitle())
-                                .imageUrl(productDto.getCategoryDto().getImageUrl())
-                                .build())
+                                .categoryId(category.getCategoryId())
+                                .title(category.getTitle())
+                                .build()
+                )
+                .brand(productDto.getBrand())
+                .color(productDto.getColor())
+                .dynamicFields(productDto.getDynamicFields())
+                .subCategoryId(productDto.getSubCategoryId())
                 .build();
     }
 

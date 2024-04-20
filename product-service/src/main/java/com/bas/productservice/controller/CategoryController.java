@@ -2,6 +2,7 @@ package com.bas.productservice.controller;
 
 import com.bas.productservice.constant.ProductConstants;
 import com.bas.productservice.dto.CategoryDto;
+import com.bas.productservice.dto.CategoryRequest;
 import com.bas.productservice.dto.ResponseDto;
 import com.bas.productservice.service.CategoryService;
 import jakarta.validation.Valid;
@@ -34,10 +35,8 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<ResponseDto> save(
             @RequestBody
-            @Valid final CategoryDto categoryDto) {
-            System.out.println("controller"+categoryDto);
+            @Valid final CategoryRequest categoryDto) {
             var createdCategory = categoryService.createCategory(categoryDto);
-            System.out.println("controller2"+createdCategory);
             return ResponseEntity.status(HttpStatus.CREATED).
                 body(new ResponseDto(ProductConstants.STATUS_200, ProductConstants.MESSAGE_201_CATEGORY,createdCategory));
     }

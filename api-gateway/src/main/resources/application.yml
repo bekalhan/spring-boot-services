@@ -24,8 +24,6 @@ spring:
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/product/**
-          filters:
-            - AuthenticationFilter
         - id: cart
           uri: lb://CART-SERVICE
           predicates:

@@ -1,20 +1,18 @@
 package com.bas.productservice.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
-@Entity
 @Table(name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"category"})
 @Data
 @Builder
+@Entity
 public class Product extends BaseEntity {
 
     @Id
@@ -26,10 +24,17 @@ public class Product extends BaseEntity {
     private String description;
     private String imageUrl;
     private Integer quantity;
-    //features object
-// renk marka hafiza gibi ozellliklerin eklenmesi gerekiyo
-    //ekran boyutu
+
+    private String brand;
+    private String color;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="category_id")
     private Category category;
+    private Long subCategoryId;
+    @ElementCollection
+    @CollectionTable(name = "dynamic_fields", joinColumns = @JoinColumn(name = "entity_id"))
+    @MapKeyColumn(name = "field_key")
+    @Column(name = "field_value")
+    private Map<String, String> dynamicFields;
+
 }

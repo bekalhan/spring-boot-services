@@ -1,6 +1,7 @@
 package com.bas.productservice.service.impl;
 
 import com.bas.productservice.dto.CategoryDto;
+import com.bas.productservice.dto.CategoryRequest;
 import com.bas.productservice.entity.Category;
 import com.bas.productservice.exception.CategoryNotFound;
 import com.bas.productservice.exception.ItemAlreadyExist;
@@ -17,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getAllCategories() {
         var categories = categoryRepository.findAll();
         return categories.stream()
+                .filter((el) -> el.getParentCategory() == null)
                 .map(CategoryMapperHelper::map).collect(Collectors.toList());
 
     }
@@ -46,9 +49,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) {
+    public CategoryDto createCategory(CategoryRequest categoryDto) {
+        System.out.println("id "+categoryDto.getParentCategoryId());
         var categoryExist = categoryRepository.existsByTitle(categoryDto.getTitle());
         if(categoryExist) throw new ResourceAlreadyExistException("Category","title",categoryDto.getTitle());
+
+        if(categoryDto.getParentCategoryId() != null){
+            Category category = categoryRepository.findById(categoryDto.getParentCategoryId())
+                            .orElseThrow(()-> new ResourceNotFoundException("id","parent category id",categoryDto.getParentCategoryId()));
+            categoryDto.setCategory(category);
+        }
         return CategoryMapperHelper.map(this.categoryRepository
                 .save(CategoryMapperHelper.map(categoryDto)));
     }
@@ -61,9 +71,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         BeanUtils.copyProperties(categoryDto, existingCategory, "categoryId", "parentCategoryDto");
 
-        if (categoryDto.getParentCategoryDto() != null) {
-            existingCategory.setParentCategory(CategoryMapperHelper.map(categoryDto.getParentCategoryDto()));
-        }
 
         return CategoryMapperHelper.map(categoryRepository.save(existingCategory));
     }

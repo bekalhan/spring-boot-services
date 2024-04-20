@@ -1,6 +1,7 @@
 package com.bas.productservice.service.impl;
 
 import com.bas.productservice.dto.ProductDTO;
+import com.bas.productservice.dto.ProductRequest;
 import com.bas.productservice.entity.Category;
 import com.bas.productservice.entity.Product;
 import com.bas.productservice.exception.ItemAlreadyExist;
@@ -29,12 +30,14 @@ public class ProductServiceImpl implements ProductService {
    private final ProductRepository productRepository;
    private final CategoryRepository categoryRepository;
     public List<ProductDTO> showAllProducts(){
-        return productRepository.findAll().stream().map((product)-> ProductDTO.
-                builder()
-                .name(product.getName())
-                .price(product.getPrice())
-                .description(product.getDescription())
-                .build()).collect(Collectors.toList());
+        List<Product> products = productRepository.findAll();
+        return products.stream().map((product -> ProductMapperHelper.map(product))).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> showAllProductsBySubCategoryId(Long id) {
+        List<Product> products = productRepository.findBySubCategoryId(id);
+        return products.stream().map((product -> ProductMapperHelper.map(product))).collect(Collectors.toList());
     }
 
     public ProductDTO findProductByName(String name) throws ProductNotFound {
@@ -68,21 +71,24 @@ public class ProductServiceImpl implements ProductService {
         }
         BeanUtils.copyProperties(productDto, existingProduct, "productId", "category");
 
-        if (productDto.getCategoryDto() != null) {
-            existingProduct.setCategory(CategoryMapperHelper.map(productDto.getCategoryDto()));
-        }
+    //    if (productDto.getCategoryDto() != null) {
+      //      existingProduct.setCategory(CategoryMapperHelper.map(productDto.getCategoryDto()));
+       // }
         Product updatedProduct = productRepository.save(existingProduct);
         return ProductMapperHelper.map(updatedProduct);
     }
 
 
-    public ProductDTO addProduct(ProductDTO productDTO){
+    public ProductDTO addProduct(ProductRequest productDTO){
+        System.out.println("bak"+productDTO.getDynamicFields());
         var productExist = productRepository.existsByName(productDTO.getName());
         if(productExist){
             throw new ItemAlreadyExist("Product already exist");
         }
         try {
-            return ProductMapperHelper.map(this.productRepository.save(ProductMapperHelper.map(productDTO)));
+            Category category = categoryRepository.findById(productDTO.getCategoryId())
+                    .orElseThrow(()-> new ResourceNotFoundException("category id","category id", productDTO.getCategoryId()));
+            return ProductMapperHelper.map(this.productRepository.save(ProductMapperHelper.map(productDTO,category)));
         } catch (Exception e) {
             throw new ProductNotFound("Error saving product", e);
         }

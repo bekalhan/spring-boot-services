@@ -1,6 +1,7 @@
 package com.bas.productservice.helper;
 
 import com.bas.productservice.dto.CategoryDto;
+import com.bas.productservice.dto.CategoryRequest;
 import com.bas.productservice.entity.Category;
 
 import java.util.Collections;
@@ -12,38 +13,31 @@ public class CategoryMapperHelper {
         final var parentCategory = Optional.ofNullable(category
                 .getParentCategory()).orElseGet(() -> new Category());
 
+
+
        // System.out.println("bak"+category);
 
         return CategoryDto.builder()
                 .categoryId(category.getCategoryId())
                 .title(category.getTitle())
-                .imageUrl(category.getImageUrl())
-                .productDtos(Optional.ofNullable(category.getProducts())
-                        .orElse(Collections.emptySet())
-                        .stream()
-                        .map(product -> ProductMapperHelper.map(product))
-                        .collect(Collectors.toSet()))
-                .parentCategoryDto(
-                        CategoryDto.builder()
-                                .categoryId(parentCategory.getCategoryId())
-                                .title(parentCategory.getTitle())
-                                .imageUrl(parentCategory.getImageUrl())
-                                .build())
+                .subCategoriesDtos(
+                        Optional.ofNullable(category.getSubCategories())
+                                .orElse(Collections.emptySet())
+                                .stream()
+                                .map(sub -> CategoryMapperHelper.map(sub))
+                                .collect(Collectors.toSet())
+                )
                 .build();
     }
 
-    public static Category map(final CategoryDto categoryDto) {
-        System.out.println("dto to category "+categoryDto);
+    public static Category map(final CategoryRequest categoryDto) {
         return Category.builder()
-                .categoryId(categoryDto.getCategoryId())
                 .title(categoryDto.getTitle())
-                .imageUrl(categoryDto.getImageUrl())
                 .parentCategory(
-                        Optional.ofNullable(categoryDto.getParentCategoryDto())
+                        Optional.ofNullable(categoryDto.getCategory())
                                 .map(parentCategoryDto -> Category.builder()
                                         .categoryId(parentCategoryDto.getCategoryId())
                                         .title(parentCategoryDto.getTitle())
-                                        .imageUrl(parentCategoryDto.getImageUrl())
                                         .build())
                                 .orElse(null)
                 )
@@ -52,7 +46,6 @@ public class CategoryMapperHelper {
 
     public static CategoryDto mapWithProducts(final Category category) {
         CategoryDto categoryDto = map(category);
-        categoryDto.setProductDtos(ProductMapperHelper.mapList(category.getProducts()));
         return categoryDto;
     }
 }
