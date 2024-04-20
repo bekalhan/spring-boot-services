@@ -16,4 +16,10 @@ public interface OrderService {
 
     List<Order> viewOrderByStatus(List<Long> orderIds, String status);
 
+    List<OrderDTO> findAll();
+    OrderDTO findById(final Long orderId);
+    OrderDTO save(final OrderDTO orderDto);
+    OrderDTO update(final OrderDTO orderDto);
+    OrderDTO update(final Long orderId, final OrderDTO orderDto);
+    void deleteById(final Long orderId);
 }

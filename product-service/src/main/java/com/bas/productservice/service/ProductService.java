@@ -9,7 +9,9 @@ public interface ProductService {
 
     ProductDTO findProductByName(String name);
 
-    String addProduct(ProductDTO productDTO);
+    ProductDTO findProductId(Long productId);
+    ProductDTO  addProduct(ProductDTO productDTO);
 
-    String deleteProduct(String name);
+    String deleteProduct(Long productId);
+    ProductDTO patchProduct(Long productId, ProductDTO productDto);
 }

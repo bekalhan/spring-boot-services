@@ -5,9 +5,9 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/bekalhan/kalhan-config.git
-          username: bekalhan
-          password: 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
+          uri: https://github.com/aaytugozkaya/aaytugozkaya-config-main.git
+          username: aaytugozkaya
+          password: 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
           clone-on-start: true
           default-label: main
 server:

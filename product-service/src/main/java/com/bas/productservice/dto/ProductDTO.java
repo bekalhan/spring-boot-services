@@ -18,11 +18,16 @@ import lombok.NoArgsConstructor;
         description = "Schema to hold Product information"
 )
 public class ProductDTO {
-    @NotBlank(message = "Name cannot be empty")
+    private Long productId;
+    @NotNull(message = "title should not be null or empty")
     private String name;
-    @NotNull(message = "Price cannot be empty")
-    @Min(value = 1000,message = "Product price cannot be less than 1000")
-    private Long price;
+    @NotNull(message = "price should not be null or empty")
+    private Double price;
     @NotBlank(message = "description cannot be empty")
     private String description;
+    private String imageUrl;
+    @NotNull(message = "quantity should not be null or empty")
+    private Integer quantity;
+    @NotNull(message = "categoryId must not be null")
+    private CategoryDto categoryDto;
 }
