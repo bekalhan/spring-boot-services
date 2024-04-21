@@ -40,6 +40,12 @@ public class ProductServiceImpl implements ProductService {
         return products.stream().map((product -> ProductMapperHelper.map(product))).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductDTO> showAllProductsByCategoryId(Long id) {
+        List<Product> products = productRepository.findByCategoryId(  id);
+        return products.stream().map((product -> ProductMapperHelper.map(product))).collect(Collectors.toList());
+    }
+
     public ProductDTO findProductByName(String name) throws ProductNotFound {
         Optional<Product> product=productRepository.findByName(name);
         if(product.isEmpty())throw new ProductNotFound("There is no product with this name");

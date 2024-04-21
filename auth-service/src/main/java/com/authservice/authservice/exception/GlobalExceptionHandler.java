@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,21 +56,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String message = error.getDefaultMessage();
             errors.put(fieldName, message);
         });
+        String firstKey = errors.keySet().iterator().next();
+        String firstValue = errors.get(firstKey);
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        Map<String,String> getFirstError = new HashMap<>();
+        getFirstError.put("message",firstValue);
+
+        return new ResponseEntity<>(getFirstError, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception,
-//                                                                        WebRequest webRequest){
-//        Map<String, String> errors = new HashMap<>();
-//        exception.getBindingResult().getAllErrors().forEach((error) ->{
-//            String fieldName = ((FieldError)error).getField();
-//            String message = error.getDefaultMessage();
-//            errors.put(fieldName, message);
-//        });
-//        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-//    }
 
 
 

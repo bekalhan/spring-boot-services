@@ -63,6 +63,9 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .username(request.getEmail())
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
                 .build();
     }
 
@@ -72,6 +75,8 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 usernamePasswordAuthenticationToken
         );
+
+        Optional<User> userDetails = Optional.ofNullable(userRepository.findByUsername(request.getEmail()).orElseThrow(() -> new EntityNotFoundException()));
         var user = userRepository.findByUsername(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -80,6 +85,9 @@ public class AuthenticationService {
         return new AuthenticationResponse().builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .username(request.getEmail())
+                .firstname(userDetails.get().getFirstname())
+                .lastname(userDetails.get().getLastname())
                 .build();
     }
 
@@ -124,6 +132,9 @@ public class AuthenticationService {
                 saveUserToken(user, accessToken);
                 var authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
+                        .firstname(user.getFirstname())
+                        .lastname(user.getLastname())
+                        .username(user.getUsername())
                         .refreshToken(refreshToken)
                         .mfaEnabled(false)
                         .build();

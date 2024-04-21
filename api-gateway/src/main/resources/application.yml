@@ -30,7 +30,6 @@ spring:
             - Path=/cart/**
           filters:
             - AuthenticationFilter
-
 management:
   endpoints:
     web:

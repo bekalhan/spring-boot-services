@@ -65,10 +65,17 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body("Product deleted successfully");
     }
 
-    @GetMapping("/{subCategoryId}")
+    @GetMapping("/sub/{subCategoryId}")
     public ResponseEntity<List<ProductDTO>> getProductsBySubCategoryId(@PathVariable(value = "subCategoryId") Long subCategoryId){
         List<ProductDTO> allProducts = productService.showAllProductsBySubCategoryId(subCategoryId);
         return new ResponseEntity<>(allProducts,HttpStatus.OK);
     }
+
+    @GetMapping("/parent/{categoryId}")
+    public ResponseEntity<List<ProductDTO>> getProductsByCategoryId(@PathVariable(value = "categoryId") Long categoryId){
+        List<ProductDTO> allProducts = productService.showAllProductsByCategoryId(categoryId);
+        return new ResponseEntity<>(allProducts,HttpStatus.OK);
+    }
+
 
 }

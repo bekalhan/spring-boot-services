@@ -27,7 +27,7 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "password is required")
-    @Size(min = 8, message = "Firstname must be more then 3 characters")
+    @Size(min = 8, message = "Password must be more then 8 characters")
     private String password;
 
     private Role role;

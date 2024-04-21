@@ -10,6 +10,8 @@ public interface ProductService {
 
     List<ProductDTO> showAllProductsBySubCategoryId(final Long id);
 
+    List<ProductDTO> showAllProductsByCategoryId(final Long id);
+
     ProductDTO findProductByName(String name);
 
     ProductDTO findProductId(Long productId);

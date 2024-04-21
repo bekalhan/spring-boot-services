@@ -17,4 +17,8 @@ public class AuthenticationResponse {
     private String refreshToken;
     private boolean mfaEnabled;
     private String secretImageUri;
+
+    private String firstname;
+    private String lastname;
+    private String username;
 }
