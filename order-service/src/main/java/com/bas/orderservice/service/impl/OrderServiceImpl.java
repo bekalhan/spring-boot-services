@@ -4,16 +4,18 @@ import com.bas.orderservice.dto.OrderDTO;
 import com.bas.orderservice.dto.ProductDTO;
 import com.bas.orderservice.entity.Order;
 import com.bas.orderservice.entity.Status;
-import com.bas.orderservice.exception.ProductNotFound;
+import com.bas.orderservice.exception.ProductNotExist;
 import com.bas.orderservice.feign.ProductFeign;
 import com.bas.orderservice.helper.OrderMappingHelper;
 import com.bas.orderservice.repository.OrderRepository;
+import com.bas.orderservice.request.OrderRequest;
 import com.bas.orderservice.service.OrderService;
 import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,19 +28,22 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     //private final ProductFeign productFeign;
+    private final RestTemplate restTemplate;
 
-    public Long bookOrder(OrderDTO orderDTO) throws ProductNotFound {
+    public Long bookOrder(OrderRequest orderRequest) throws ProductNotExist {
         try {
-            ProductFeign productFeign = null;
-            ResponseEntity<ProductDTO> productDTOResponseEntity=productFeign.findProductByName(orderDTO.getProductDto().getProductTitle());
+
             Order order=Order.builder()
-                   // .productName(orderDTO.getProductDto().getProductTitle())
-                    .status(Status.BOOKED)
+                    .orderPrice(orderRequest.getOrderPrice())
+                    .productId(orderRequest.getProductId())
+                    .status(Status.SUBMITTED)
+                    .quantity(orderRequest.getQuantity())
+                    //.cart(orderRequest.getCartId())
                     .build();
             orderRepository.save(order);
             return order.getOrderId();
         }catch (FeignException ex){
-            throw new ProductNotFound("Product is not there in the inventory");
+            throw new ProductNotExist("Product is not there in the inventory");
         }
     }
     public String cancelOrder(Long orderId){
@@ -69,15 +74,21 @@ public class OrderServiceImpl implements OrderService {
 
         return this.orderRepository.findById(orderId)
                 .map(OrderMappingHelper::map)
-                .orElseThrow(() -> new ProductNotFound(String
+                .orElseThrow(() -> new ProductNotExist(String
                         .format("Order with id: %d not found", orderId)));
     }
 
     @Override
-    public OrderDTO save(OrderDTO orderDto) {
-
-        return OrderMappingHelper.map(this.orderRepository
-                .save(OrderMappingHelper.map(orderDto)));
+    public OrderRequest save(OrderRequest orderRequest) {
+        Order order=Order.builder()
+                .orderPrice(orderRequest.getOrderPrice())
+                .productId(orderRequest.getProductId())
+                .status(Status.SUBMITTED)
+                .quantity(orderRequest.getQuantity())
+                //.cart(orderRequest.getCartId())
+                .build();
+        orderRepository.save(order);
+        return  orderRequest;//??Benden ne dönmemi istiyor ONA GÖRE DEĞİŞECEK!!1
     }
 
     @Override

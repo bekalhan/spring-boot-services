@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/users")
+@RequestMapping(value = "/user/")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -23,18 +23,18 @@ public class UserController {
     public ResponseEntity<String>addUserDetails(@RequestBody @Valid UserDTO userDTO,@RequestHeader("currUser") String username){
         return new ResponseEntity<>(userService.addUserDetails(userDTO,username), HttpStatus.CREATED);
     }
-
+    @GetMapping("{userId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "userId") Long userId){
+        UserDTO user = userService.findUserById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
    /* @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         List<UserDTO> allUsers = userService.findAll();
         return  ResponseEntity.status(HttpStatus.OK).body(allUsers);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "userId") Integer userId){
-        UserDTO user = userService.findById(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
-    }
+
 
     @PostMapping
     public ResponseEntity<UserDTO> save(@RequestBody @Valid UserDTO userDto){

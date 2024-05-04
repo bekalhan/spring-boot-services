@@ -8,4 +8,5 @@ import java.util.List;
 public interface UserService {
     String addUserDetails(UserDTO userDTO,String username);
     String addCard(CardDTO cardDTO,String username);
+     UserDTO findUserById(Long userId);
 }

@@ -2,8 +2,8 @@ package com.bas.orderservice.controller;
 
 import com.bas.orderservice.dto.OrderDTO;
 import com.bas.orderservice.entity.Order;
-import com.bas.orderservice.exception.ProductNotFound;
-import com.bas.orderservice.feign.ProductFeign;
+import com.bas.orderservice.exception.ProductNotExist;
+import com.bas.orderservice.request.OrderRequest;
 import com.bas.orderservice.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/order/")
 @Slf4j
 @RequiredArgsConstructor
 public class OrderController {
@@ -33,8 +33,8 @@ public class OrderController {
     }
 
     @PostMapping("book")
-    public ResponseEntity<Long>bookOrder(@RequestBody OrderDTO orderDTO) throws ProductNotFound {
-        return new ResponseEntity<>(orderService.bookOrder(orderDTO),HttpStatus.CREATED);
+    public ResponseEntity<Long>bookOrder(@RequestBody OrderRequest orderRequest) throws ProductNotExist {
+        return new ResponseEntity<>(orderService.bookOrder(orderRequest),HttpStatus.CREATED);
     }
 
     @PutMapping("cancel")
@@ -68,12 +68,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> save(
+    public ResponseEntity<OrderRequest> save(
             @RequestBody
             @NotNull(message = "Input must not be NULL")
-            @Valid final OrderDTO orderDto) {
+            @Valid final OrderRequest orderRequest) {
         log.info("*** OrderDto, resource; save order *");
-        return ResponseEntity.ok(this.orderService.save(orderDto));
+        return ResponseEntity.ok(this.orderService.save(orderRequest));
     }
 
     @PutMapping

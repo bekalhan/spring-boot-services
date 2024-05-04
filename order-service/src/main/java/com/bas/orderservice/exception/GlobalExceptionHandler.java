@@ -23,8 +23,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ProductNotFound.class)
-    public ResponseEntity<Map<String, List<String>>> handleValidationErrors(ProductNotFound ex) {
+    @ExceptionHandler(ProductNotExist.class)
+    public ResponseEntity<Map<String, List<String>>> handleValidationErrors(ProductNotExist ex) {
         String ans= ex.getMessage();
         List<String>errors=List.of(ans);
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);

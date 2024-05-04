@@ -1,5 +1,6 @@
 package com.bas.userservice.service.impl;
 
+import com.bas.userservice.dto.AddressDTO;
 import com.bas.userservice.dto.CardDTO;
 import com.bas.userservice.dto.UserDTO;
 import com.bas.userservice.entity.Address;
@@ -23,7 +24,32 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-
+    public UserDTO findUserById(Long userId) {
+        User user =  userRepository.findById(userId).orElseThrow(()->new InvalidActionException("User not found"));
+        return  UserDTO.builder()
+                .userId(user.getUserId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phNo(user.getPhNo())
+                .username(user.getUsername())
+                .addressDTOList(user.getAddressList().stream().map((address)->{
+                     return AddressDTO.builder()
+                            .name(address.getName())
+                            .phNo(address.getPhNo())
+                            .state(address.getState())
+                            .city(address.getCity())
+                            .pinCode(address.getPinCode())
+                            .addressType(address.getAddressType())
+                            .build();
+                }).toList())
+                .cardDTOList(user.getCardList().stream().map((card)->{
+                    return CardDTO.builder()
+                            .cardNumber(card.getCardNumber())
+                            .nameOnCard(card.getNameOnCard())
+                            .build();
+                }).toList())
+                .build();
+    }
     @Override
     public String addUserDetails(UserDTO userDTO, String username) {
         //fetch username from atuh service

@@ -1,6 +1,7 @@
 package com.bas.orderservice.service;
 
 import com.bas.orderservice.dto.CartDto;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -11,5 +12,7 @@ public interface CartService{
     CartDto update(CartDto cartDto);
     CartDto update(Long id, CartDto cartDto);
     void deleteById(Long id);
+
+
 
 }

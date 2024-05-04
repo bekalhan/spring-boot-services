@@ -3,6 +3,8 @@ package com.bas.userservice.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.security.auth.Subject;
+import java.security.Principal;
 import java.util.List;
 
 @Entity
@@ -11,7 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Builder
-public class User{
+@Getter
+@Setter
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -25,4 +29,6 @@ public class User{
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_user_id")
     private List<Card>cardList;
+
+
 }

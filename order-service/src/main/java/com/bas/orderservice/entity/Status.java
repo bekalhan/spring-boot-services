@@ -1,7 +1,8 @@
 package com.bas.orderservice.entity;
 
 public enum Status {
-    BOOKED,
+    PENDING,
+    SUBMITTED,
     CANCELLED,
     READY_FOR_SHIPPING,
     SHIPPED,

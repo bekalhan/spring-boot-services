@@ -30,7 +30,7 @@ public class OrderDTO {
     private LocalDateTime orderDate;
 
     private String orderDesc;
-    private Double orderFee;
+    private Double orderPrice;
 
     private Integer productId;
     @Enumerated(EnumType.STRING)

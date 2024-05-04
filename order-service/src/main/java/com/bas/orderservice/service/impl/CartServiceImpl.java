@@ -28,14 +28,14 @@ public class CartServiceImpl implements CartService {
         return this.cartRepository.findAll().stream()
                 .map(cart -> {
                     CartDto cartDto = CartDto.builder()
-                            .cartId(cart.getCartId())
+                            .cartId(cart.getId())
                             .userId(cart.getUserId())
                             .build();
                     return cartDto;
                 })
-                .map(c-> {c.setUserDto(this.restTemplate.getForObject(
-                        AppConstant.DiscoveredDomainsApi.USER_SERVICE_API_URL+"/"+c.getUserDto().getUserId(), UserDto.class));
-                    return c;})
+//                .map(c-> {c.setUserId(this.restTemplate.getForObject(
+//                        AppConstant.DiscoveredDomainsApi.USER_SERVICE_API_URL+"/"+c.getUserId(), UserDto.class));
+//                    return c;})
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService {
         return this.cartRepository.findById(cartId)
                 .map(cart -> {
                     CartDto cartDto = CartDto.builder()
-                            .cartId(cart.getCartId())
+                            .cartId(cart.getId())
                             .userId(cart.getUserId())
                             .build();
                     return cartDto;
@@ -59,18 +59,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto save(CartDto cartDto) {
-        return CartMappingHelper.map(this.cartRepository.save(CartMappingHelper.map(cartDto)));
+        return CartMappingHelper.toCartDto(this.cartRepository.save(CartMappingHelper.toCart(cartDto)));
     }
 
     @Override
     public CartDto update(CartDto cartDto) {
-        return CartMappingHelper.map(this.cartRepository.save(CartMappingHelper.map(cartDto)));
+        return CartMappingHelper.toCartDto(this.cartRepository.save(CartMappingHelper.toCart(cartDto)));
     }
 
     @Override
     public CartDto update(Long cartId, CartDto cartDto) {
-        return CartMappingHelper.map(this.cartRepository
-                .save(CartMappingHelper.map(this.findById(cartId))));
+        return CartMappingHelper.toCartDto(this.cartRepository
+                .save(CartMappingHelper.toCart(this.findById(cartId))));
     }
 
     @Override

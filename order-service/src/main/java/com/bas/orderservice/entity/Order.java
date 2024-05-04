@@ -10,8 +10,11 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Builder
@@ -20,6 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "orders")
+@EntityListeners(AuditingEntityListener.class)
 //@EqualsAndHashCode(callSuper = true, exclude = {"cart"})
 public class Order {
     @Id
@@ -34,18 +38,43 @@ public class Order {
     @JsonFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
     @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT)
     @Column(name = "order_date")
+    @CreatedDate
     private LocalDateTime orderDate;
 
     @Column(name = "order_desc")
     private String orderDesc;
 
     @Column(name = "order_fee", columnDefinition = "decimal")
-    private Double orderFee;
+    private Double orderPrice;
 
     @Column(name = "product_id")
-    private Integer productId;
+    private Long productId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    @Column(name = "QUANTITY")
+    private long quantity;
+
+
+//        @Id
+//        @GeneratedValue(strategy = GenerationType.AUTO)
+//        private long id;
+//
+//        @Column(name = "PRODUCT_ID")
+//        private long productId;
+//
+//        @Column(name = "QUANTITY")
+//        private long quantity;
+//
+//        @Column(name = "ORDER_DATE")
+//        private Instant orderDate;
+//
+//       @Enumerated(EnumType.STRING)
+//        private Status status;
+//
+//        @Column(name = "TOTAL_AMOUNT")
+//        private double totalPrice;
+
 }

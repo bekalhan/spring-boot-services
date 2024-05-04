@@ -11,10 +11,10 @@ public class OrderMappingHelper {
                 .orderId(order.getOrderId())
                 .orderDate(order.getOrderDate())
                 .orderDesc(order.getOrderDesc())
-                .orderFee(order.getOrderFee())
+                .orderPrice(order.getOrderPrice())
                 .cartDto(
                         CartDto.builder()
-                                .cartId(order.getCart().getCartId())
+                                .cartId(order.getCart().getId())
                                 .build())
                 .build();
     }
@@ -24,10 +24,10 @@ public class OrderMappingHelper {
                 .orderId(orderDto.getOrderId())
                 .orderDate(orderDto.getOrderDate())
                 .orderDesc(orderDto.getOrderDesc())
-                .orderFee(orderDto.getOrderFee())
+                .orderPrice(orderDto.getOrderPrice())
                 .cart(
                         Cart.builder()
-                                .cartId(orderDto.getCartDto().getCartId())
+                                .Id(orderDto.getCartDto().getCartId())
                                 .build())
                 .build();
     }

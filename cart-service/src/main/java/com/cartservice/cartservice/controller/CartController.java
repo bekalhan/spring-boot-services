@@ -2,6 +2,9 @@ package com.cartservice.cartservice.controller;
 
 import com.cartservice.cartservice.dto.CartDTO;
 import com.cartservice.cartservice.entity.Cart;
+import com.cartservice.cartservice.request.CartRequest;
+import com.cartservice.cartservice.response.BasicCartResponse;
+import com.cartservice.cartservice.response.CartResponse;
 import com.cartservice.cartservice.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +25,35 @@ public class CartController {
         return new ResponseEntity<>("cartController", HttpStatus.OK);
     }
 
-    @PostMapping("addProduct")
-    public ResponseEntity<Long>addToCart(@RequestBody @Valid CartDTO cartDTO){
-        System.out.println("add product");
-        return new ResponseEntity<>(cartService.addToCart(cartDTO),HttpStatus.CREATED);
+    @GetMapping
+    public ResponseEntity<List<BasicCartResponse>>getAllCart(){
+        return new ResponseEntity<>(cartService.getAllCart(),HttpStatus.OK);
+    }
+    @GetMapping("getCart/{cartId}")
+    public ResponseEntity<CartResponse>viewCart(@PathVariable("cartId") Long cartId){
+        return new ResponseEntity<>(cartService.getCartById(cartId),HttpStatus.OK);
     }
 
-    @DeleteMapping("deleteProduct")
-    public ResponseEntity<String>deleteFromCart(@RequestParam Long cartId){
+    @GetMapping("getCartByUserId/{userId}")
+    public ResponseEntity<List<CartResponse>>getCartsByUserId(@PathVariable("userId") Long userId){
+        return new ResponseEntity<>(cartService.getCartsByUserId(userId),HttpStatus.OK);
+    }
+    @PostMapping("addCart")
+    public ResponseEntity<Long>addToCart(@RequestBody @Valid CartRequest cartRequest){
+        System.out.println("added product");
+        return new ResponseEntity<>(cartService.addToCart(cartRequest),HttpStatus.CREATED);
+    }
+
+    @PutMapping("updateCart/{cartId}")
+    public ResponseEntity<BasicCartResponse>updateCart(@PathVariable("cartId") Long cartId,@RequestBody @Valid CartRequest cartRequest){
+        return new ResponseEntity<>(cartService.updateCart(cartId,cartRequest),HttpStatus.OK);
+    }
+
+    @DeleteMapping("deleteCart/{cartId}")
+    public ResponseEntity<String>deleteFromCart(@PathVariable("cartId") Long cartId){
         return new ResponseEntity<>(cartService.deleteFromCart(cartId),HttpStatus.OK);
     }
 
-    @PostMapping("allProducts")
-    public ResponseEntity<List<Cart>>viewCart(@RequestBody List<Long>cartIds){
-        return new ResponseEntity<>(cartService.viewCart(cartIds),HttpStatus.OK);
-    }
+
 
 }
