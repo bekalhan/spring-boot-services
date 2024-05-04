@@ -1,5 +1,6 @@
 package com.bas.productservice.service.impl;
 
+import com.bas.productservice.dto.CategoryDto;
 import com.bas.productservice.dto.ProductDTO;
 import com.bas.productservice.dto.ProductRequest;
 import com.bas.productservice.entity.Category;
@@ -59,9 +60,18 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product=productRepository.findById(productId);
         if(product.isEmpty())throw new ProductNotFound("There is no product with this name");
         return ProductDTO.builder()
+                .productId(product.get().getProductId())
                 .name(product.get().getName())
                 .price(product.get().getPrice())
                 .description(product.get().getDescription())
+                .imageUrl(product.get().getImageUrl())
+                .quantity(product.get().getQuantity())
+                .brand(product.get().getBrand())
+                .color(product.get().getColor())
+                .categoryDto(CategoryDto.builder()
+                        .categoryId(product.get().getCategory().getCategoryId())
+                        .title(product.get().getCategory().getTitle())
+                        .build())
                 .build();
     }
 
