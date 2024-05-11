@@ -1,7 +1,5 @@
 package com.cartservice.cartservice.controller;
 
-import com.cartservice.cartservice.dto.CartDTO;
-import com.cartservice.cartservice.entity.Cart;
 import com.cartservice.cartservice.request.CartRequest;
 import com.cartservice.cartservice.response.BasicCartResponse;
 import com.cartservice.cartservice.response.CartResponse;

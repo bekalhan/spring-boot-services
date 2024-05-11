@@ -33,8 +33,7 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
-
+    
     @JsonFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
     @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT)
     @Column(name = "order_date")
@@ -58,23 +57,5 @@ public class Order {
     private long quantity;
 
 
-//        @Id
-//        @GeneratedValue(strategy = GenerationType.AUTO)
-//        private long id;
-//
-//        @Column(name = "PRODUCT_ID")
-//        private long productId;
-//
-//        @Column(name = "QUANTITY")
-//        private long quantity;
-//
-//        @Column(name = "ORDER_DATE")
-//        private Instant orderDate;
-//
-//       @Enumerated(EnumType.STRING)
-//        private Status status;
-//
-//        @Column(name = "TOTAL_AMOUNT")
-//        private double totalPrice;
 
 }

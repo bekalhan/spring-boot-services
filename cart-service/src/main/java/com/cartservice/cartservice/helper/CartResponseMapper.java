@@ -1,6 +1,7 @@
 package com.cartservice.cartservice.helper;
 
 import com.cartservice.cartservice.entity.Cart;
+import com.cartservice.cartservice.request.CartRequest;
 import com.cartservice.cartservice.response.BasicCartResponse;
 import com.cartservice.cartservice.response.CartResponse;
 import com.cartservice.cartservice.response.ProductResponse;
@@ -13,6 +14,7 @@ public class CartResponseMapper {
                 .quantity(cart.getQuantity())
                 .totalPrice(cart.getTotalPrice())
                 .createdAt(cart.getCreatedAt())
+                .status(cart.getStatus())
                 .build();
     }
     public static CartResponse mapCartToCartResponse(Cart cart) {
@@ -21,17 +23,17 @@ public class CartResponseMapper {
                 .quantity(cart.getQuantity())
                 .totalPrice(cart.getTotalPrice())
                 .createdAt(cart.getCreatedAt())
+                .status(cart.getStatus())
                 .build();
     }
 
-    public static Cart mapCartResponseToCart(CartResponse cartResponse) {
+    public static Cart mapCartRequestToCart(CartRequest cartRequest) {
         return Cart.builder()
-                .cartId(cartResponse.getCartId())
-                .productId(cartResponse.getProduct().getProductId())
-                .userId(cartResponse.getProduct().getProductId())
-                .quantity(cartResponse.getQuantity())
-                .totalPrice(cartResponse.getTotalPrice())
-                .createdAt(cartResponse.getCreatedAt())
+                .productId(cartRequest.getProductId())
+                .userId(cartRequest.getUserId())
+                .quantity(cartRequest.getQuantity())
+                .totalPrice(cartRequest.getTotalPrice())
+                .status(cartRequest.getStatus())
                 .build();
     }
 
@@ -55,5 +57,14 @@ public class CartResponseMapper {
                 .username(userResponse.getUsername())
                 .phNo(userResponse.getPhNo())
                 .build();
+    }
+
+    public static  CartResponse buildCartResponse(Cart cart) {
+        return CartResponse.builder()
+                .quantity(cart.getQuantity())
+                .status(cart.getStatus())
+                .totalPrice(cart.getTotalPrice())
+                .createdAt(cart.getCreatedAt()).build();
+
     }
 }
