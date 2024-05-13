@@ -66,28 +66,35 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Override
     public GatewayFilter apply(Config config) {
-        return ((exchange, chain) -> {
+        System.out.println("entered");
+        return (exchange, chain) -> {
+            System.out.println("chain");
             if (validator.isSecured.test(exchange.getRequest())) {
-                //header contains token or not
+                System.out.println("secured");
+                // Header contains token or not
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     throw new RuntimeException("missing authorization header");
                 }
-
+                System.out.println("a");
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
                     authHeader = authHeader.substring(7);
+                } else {
+                    throw new RuntimeException("incorrect authorization header format");
                 }
+                System.out.println("b" + authHeader);
 
                 try {
-                     restTemplate.getForObject("http://localhost:8081/auth/validateTkn?jwt=" + authHeader, UserDTO.class);
-
+                    System.out.println("Validating token: " + authHeader);
+                    restTemplate.getForObject("http://localhost:8081/auth/validateTkn?jwt=" + authHeader, UserDTO.class);
+                    System.out.println("Token validated successfully");
                 } catch (Exception e) {
+                    System.out.println("Token validation failed: " + e.getMessage());
                     throw new UnAuthorizedException("Unauthorized access to application");
-                    //throw new RuntimeException("un authorized access to application");
                 }
             }
             return chain.filter(exchange);
-        });
+        };
     }
 
     public static class Config {

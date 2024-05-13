@@ -29,6 +29,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @Valid @RequestBody RegisterRequest request
     ){
+        System.out.println("register");
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
@@ -36,6 +37,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @Valid @RequestBody AuthenticationRequest request
     ){
+        System.out.println("login");
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
@@ -63,8 +65,11 @@ public class AuthenticationController {
 
     @GetMapping("validateTkn")
     public AuthenticationDTO validateToken(@RequestParam String jwt){
+        System.out.println("validate");
         var username = jwtService.extractUsername(jwt);
+        System.out.println("username = " + username);
         AuthenticationDTO user = authenticationService.findUserByUsername(username,jwt);
+        System.out.println("user"+user);
         return user;
     }
 

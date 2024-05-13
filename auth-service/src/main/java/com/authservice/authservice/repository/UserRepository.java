@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
@@ -33,7 +34,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
         JOIN TK.user US
         WHERE US.id = :id
         AND (TK.token = :token AND TK.expired = false)
+        ORDER BY TK.id DESC
     """)
-    AuthenticationDTO findTokenByUserid(@Param("id") Integer id, @Param("token") String token);
+    List<AuthenticationDTO> findTokenByUserid(@Param("id") Integer id, @Param("token") String token);
 
 }

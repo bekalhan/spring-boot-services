@@ -3,6 +3,22 @@ spring:
     name: API-GATEWAY
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "http://localhost:8000"
+            allowCredentials: true
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - GET
+              - OPTIONS
+            allowedHeaders: "*"
       routes:
         - id: user
           uri: lb://USER-SERVICE

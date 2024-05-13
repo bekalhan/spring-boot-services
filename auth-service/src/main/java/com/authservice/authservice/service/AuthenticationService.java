@@ -27,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -160,19 +161,25 @@ public class AuthenticationService {
     }
 
     public AuthenticationDTO findUserByUsername(String username,String token){
-        UserDTO userDTO = userRepository.findByUsernameAndField(username);
 
+        UserDTO userDTO = userRepository.findByUsernameAndField(username);
+        System.out.println("findUserByUsername = " + userDTO);
         if (userDTO == null) {
             throw new UnAuthorizedException("User not found");
         }
 
-        AuthenticationDTO authenticationDTO = userRepository.findTokenByUserid(userDTO.getId(), token);
-
-        if (authenticationDTO == null || authenticationDTO.getToken() == null || authenticationDTO.getUsername() == null || authenticationDTO.getPassword() == null) {
+        List<AuthenticationDTO> authenticationDTO;
+        try {
+            authenticationDTO = userRepository.findTokenByUserid(userDTO.getId(), token);
+        } catch (Exception e) {
+            System.out.println("findUserFailed " + e.getMessage());
+            throw new UnAuthorizedException("Unauthorized access to application");
+        }
+        if (authenticationDTO == null || authenticationDTO.get(0).getToken() == null || authenticationDTO.get(0).getUsername() == null || authenticationDTO.get(0).getPassword() == null) {
             throw new UnAuthorizedException("You have no access to this route");
         }
 
-        return authenticationDTO;
+        return authenticationDTO.get(0);
     }
 
 }
