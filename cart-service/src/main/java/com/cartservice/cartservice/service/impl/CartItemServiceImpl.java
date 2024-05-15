@@ -49,13 +49,13 @@ public class CartItemServiceImpl implements CartItemService {
     public Long addToCart(CartItemRequest cartItemRequest) {
         if(cartItemRequest.getQuantity()<=0)
             throw new IllegalArgumentException("Quantity should be greater than 0");
-        CartItem isProductExist = cartItemRepo.findProductExist(cartItemRequest.getProductId()).orElse(null);
+        CartItem isCartExist = cartItemRepo.findCartExist(cartItemRequest.getCartId()).orElse(null);
         ProductResponse productResponse
                 = restTemplate.getForObject(
                 "http://PRODUCT-SERVICE/product/action/product/" + cartItemRequest.getProductId(),
                 ProductResponse.class
         );
-        if(isProductExist==null){
+        if(isCartExist==null){
 
             CartItem cartItem = CartItemResponseMapper.mapCartItemRequestToCart(cartItemRequest);
             cartItem.setCart(cartRepo.findById(cartItemRequest.getCartId()).get());
@@ -64,10 +64,10 @@ public class CartItemServiceImpl implements CartItemService {
             return cartItem.getCartItemId();
         }
         else{
-            isProductExist.setQuantity(isProductExist.getQuantity()+ cartItemRequest.getQuantity());
-            isProductExist.setTotalPrice(isProductExist.getTotalPrice()+ (cartItemRequest.getQuantity()* productResponse.getPrice()));
-            cartItemRepo.save(isProductExist);
-            return isProductExist.getCartItemId();
+            isCartExist.setQuantity(isCartExist.getQuantity()+ cartItemRequest.getQuantity());
+            isCartExist.setTotalPrice(isCartExist.getTotalPrice()+ (cartItemRequest.getQuantity()* productResponse.getPrice()));
+            cartItemRepo.save(isCartExist);
+            return isCartExist.getCartItemId();
         }
     }
     public String deleteFromCart(Long cartItemId) {
