@@ -1,9 +1,10 @@
 package com.cartservice.cartservice.response;
 
-import com.cartservice.cartservice.entity.CartStatus;
+import com.cartservice.cartservice.entity.Status;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -11,13 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @Setter
 public class CartResponse {
-
     private Long cartId;
-    private ProductResponse product;
-    private UserResponse user;
-    private int quantity;
-    private Double totalPrice;
-    private CartStatus status;
+    private List<CartItemResponse> cartItems;
+    private UserResponse userId;
+    private int totalQuantity;
+    private Double cartPrice;
+    private Status status;
     private LocalDateTime createdAt;
-
 }

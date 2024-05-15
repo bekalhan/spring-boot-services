@@ -1,13 +1,10 @@
 package com.cartservice.cartservice.request;
 
-import com.cartservice.cartservice.entity.CartStatus;
+import com.cartservice.cartservice.entity.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,11 +12,8 @@ import java.util.List;
 @Builder
 public class CartRequest {
 
-    private Long productId;
     private Long userId;
-    private int quantity;
-    private Double totalPrice;
-    private CartStatus status;
-   // private LocalDateTime createdAt;
-
+    private Status status;
+    private Double cartPrice;
+    private Integer totalQuantity;
 }

@@ -1,6 +1,6 @@
 package com.cartservice.cartservice.entity;
 
-public enum CartStatus {
+public enum CartItemStatus {
 
     WAITING,
     ORDERED

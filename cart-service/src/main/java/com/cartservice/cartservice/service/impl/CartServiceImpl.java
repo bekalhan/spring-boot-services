@@ -2,114 +2,89 @@ package com.cartservice.cartservice.service.impl;
 
 import com.cartservice.cartservice.entity.Cart;
 import com.cartservice.cartservice.exception.CartNotExist;
-import com.cartservice.cartservice.helper.CartResponseMapper;
+import com.cartservice.cartservice.helper.CartMapperHelper;
 import com.cartservice.cartservice.repository.CartRepository;
 import com.cartservice.cartservice.request.CartRequest;
 import com.cartservice.cartservice.response.BasicCartResponse;
-import com.cartservice.cartservice.response.ProductResponse;
-import com.cartservice.cartservice.response.UserResponse;
+import com.cartservice.cartservice.response.CartItemResponse;
 import com.cartservice.cartservice.response.CartResponse;
+import com.cartservice.cartservice.service.CartItemService;
 import com.cartservice.cartservice.service.CartService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-
-    private final CartRepository cartRepo;
+    private final CartRepository cartRepository;
+    private final CartItemService cartItemService;
     private final RestTemplate restTemplate;
-
-    public List<BasicCartResponse> getAllCart() {
-        List<Cart> carts=cartRepo.findAll();
-
-        return carts.stream().map(cart-> CartResponseMapper.mapCartToCartResponseBasic(cart)).collect(Collectors.toList());
-    }
-
-    public CartResponse getCartById(Long cartId) {
-
-        Cart cart=cartRepo.findById(cartId).orElseThrow(()-> new CartNotExist("Cart does not exist"));
-        UserResponse userResponse
-                = restTemplate.getForObject(
-                "http://USER-SERVICE/user/" + cart.getUserId(),
-                UserResponse.class
-        );
-        ProductResponse productResponse
-                = restTemplate.getForObject(
-                "http://PRODUCT-SERVICE/product/action/product/" + cart.getProductId(),
-                ProductResponse.class
-        );
-
-        CartResponse cartResponse = CartResponseMapper.mapCartToCartResponse(cart);
-        cartResponse.setProduct(CartResponseMapper.buildProduct(productResponse));
-        cartResponse.setUser(CartResponseMapper.buildUser(userResponse));
-        return cartResponse;
-    }
-
-    public Long addToCart(CartRequest cartRequest) {
-        if(cartRequest.getQuantity()<=0)
-            throw new IllegalArgumentException("Quantity should be greater than 0");
-        Cart userAndProductExist = cartRepo.findUserAndProductExist(cartRequest.getUserId(), cartRequest.getProductId()).orElse(null);
-        if(userAndProductExist==null){
-            Cart cart= CartResponseMapper.mapCartRequestToCart(cartRequest);
-            cartRepo.save(cart);
-            return cart.getCartId();
-        }
-        else{
-            userAndProductExist.setQuantity(userAndProductExist.getQuantity()+cartRequest.getQuantity());
-            userAndProductExist.setTotalPrice(userAndProductExist.getTotalPrice()+cartRequest.getTotalPrice());
-            cartRepo.save(userAndProductExist);
-            return userAndProductExist.getCartId();
-        }
-    }
-    public String deleteFromCart(Long cartId) {
-        cartRepo.deleteById(cartId);
-        return "Product deleted from cart";
-    }
-
-
-    public BasicCartResponse updateCart(Long cartId, CartRequest cartRequest) {
-        Cart cart=cartRepo.findById(cartId).orElseThrow(() ->  new CartNotExist("Cart does not exist"));
-        cart.setUserId(cartRequest.getUserId());
-        cart.setProductId(cartRequest.getProductId());
-        cart.setQuantity(cartRequest.getQuantity());
-        cart.setStatus(cartRequest.getStatus());
-        cart.setTotalPrice(cartRequest.getTotalPrice());
-        cartRepo.save(cart);
-        return CartResponseMapper.mapCartToCartResponseBasic(cart);
-    }
-    public List<Cart> viewCart(List<Long>cartIds) {
-        return cartIds.stream().map(val->cartRepo.findById(val).get()).collect(Collectors.toList());
-    }
-
-    public List<CartResponse> getCartsByUserId(Long userId) {
-        List<Cart> carts=cartRepo.findCartsByUserId(userId).orElseThrow(()-> new CartNotExist("Cart does not exist"));
-        List<CartResponse> cartResponses = new ArrayList<>();
-
-        for (Cart cart : carts) {
-            UserResponse userResponse = restTemplate.getForObject(
-                    "http://USER-SERVICE/user/" + cart.getUserId(),
-                    UserResponse.class
-            );
-            ProductResponse productResponse
-                    = restTemplate.getForObject(
-                    "http://PRODUCT-SERVICE/product/action/product/" + cart.getProductId(),
-                    ProductResponse.class
-            );
-
-            CartResponse cartResponse = CartResponseMapper.mapCartToCartResponse(cart);
-            cartResponse.setUser(userResponse);
-            cartResponse.setProduct(productResponse);
-            cartResponses.add(cartResponse);
-        }
+    @Override
+    public List<CartResponse> getAllCarts() {
+       List<Cart> carts = cartRepository.findAll();
+       List<CartResponse> cartResponses = new ArrayList<>();
+       for (Cart cart : carts){
+           List<CartItemResponse> cartItemResponses = cartItemService.getCartsByCartId(cart.getCartId());
+           CartResponse cartResponse = CartResponse.builder()
+                   .cartId(cart.getCartId())
+                   .cartItems(cartItemResponses)
+                   .totalQuantity(cartItemResponses.stream().mapToInt(CartItemResponse::getQuantity).sum())
+                   .cartPrice(cartItemResponses.stream().mapToDouble(cartItemResponse -> cartItemResponse.getProduct().getPrice()*cartItemResponse.getQuantity()).sum())
+                   .status(cart.getStatus())
+                   .createdAt(cart.getCreatedAt())
+                   .build();
+           cartResponses.add(cartResponse);
+       }
         return cartResponses;
     }
 
+
+
+    @Override
+    public CartResponse getCartById(Long cartId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotExist("Cart does not exist"));
+        List<CartItemResponse> cartItemResponse = cartItemService.getCartsByCartId(cart.getCartId());
+        CartResponse cartResponse = CartResponse.builder()
+                .cartId(cart.getCartId())
+                .cartItems(cartItemResponse)
+                .totalQuantity(cartItemResponse.stream().mapToInt(CartItemResponse::getQuantity).sum())
+                .cartPrice(cartItemResponse.stream().mapToDouble(cartItemRespons -> cartItemRespons.getProduct().getPrice()*cartItemRespons.getQuantity()).sum())
+                .status(cart.getStatus())
+                .createdAt(cart.getCreatedAt())
+                .build();
+        return cartResponse;
+    }
+
+    @Override
+    public Long createCart(CartRequest cartRequest) {
+
+        Cart cart = Cart.builder()
+                .userId(cartRequest.getUserId())
+                .status(cartRequest.getStatus())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return  cartRepository.save(cart).getCartId();
+
+    }
+
+    @Override
+    public BasicCartResponse updateCart(Long cartId, CartRequest cartRequest) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(()-> new CartNotExist("Cart does not exist"));
+        cart.setStatus(cartRequest.getStatus());
+        cart.setUserId(cartRequest.getUserId());
+        cartRepository.save(cart);
+        return CartMapperHelper.mapCartToBasicCartResponse(cart);
+    }
+
+    @Override
+    public String deleteCart(Long cartId) {
+        cartRepository.deleteById(cartId);
+        return " cart with id : " + cartId + " has deleted.";
+    }
 }
