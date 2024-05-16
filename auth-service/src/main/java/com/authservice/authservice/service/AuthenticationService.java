@@ -63,6 +63,7 @@ public class AuthenticationService {
         saveUserToken(savedUser,jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
+                .userId(savedUser.getId())
                 .refreshToken(refreshToken)
                 .username(request.getEmail())
                 .firstname(request.getFirstname())
@@ -85,6 +86,7 @@ public class AuthenticationService {
         saveUserToken(user,jwtToken);
         return new AuthenticationResponse().builder()
                 .accessToken(jwtToken)
+                .userId(userDetails.get().getId())
                 .refreshToken(refreshToken)
                 .username(request.getEmail())
                 .firstname(userDetails.get().getFirstname())

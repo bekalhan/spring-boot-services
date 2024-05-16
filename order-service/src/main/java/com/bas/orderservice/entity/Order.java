@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -25,36 +26,37 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @EntityListeners(AuditingEntityListener.class)
 //@EqualsAndHashCode(callSuper = true, exclude = {"cart"})
-public class Order {
+public class Order   {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", unique = true, nullable = false, updatable = false)
     private Long orderId;
 
+    private String userId;
+
+//    private String firstName;
+//
+//    private String lastName;
+//
+    private String addressLine1;
+//
+//    private String addressLine2;
+//
+    private String city;
+    private String state;
+    private String phoneNo;
+
+    private Long cartId;
     @Enumerated(EnumType.STRING)
-    private Status status;
-    
-    @JsonFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT, shape = JsonFormat.Shape.STRING)
-    @DateTimeFormat(pattern = AppConstant.LOCAL_DATE_TIME_FORMAT)
-    @Column(name = "order_date")
+    private Status orderStatus;
     @CreatedDate
-    private LocalDateTime orderDate;
+    private LocalDateTime createdAt;
 
-    @Column(name = "order_desc")
-    private String orderDesc;
 
-    @Column(name = "order_fee", columnDefinition = "decimal")
-    private Double orderPrice;
 
-    @Column(name = "product_id")
-    private Long productId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
 
-    @Column(name = "QUANTITY")
-    private long quantity;
+
 
 
 

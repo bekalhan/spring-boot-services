@@ -1,4 +1,4 @@
-package com.bas.orderservice.dto;
+package com.bas.orderservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class UserDto {
+public class UserResponse {
     private Long userId;
     private String fullname;
     private String username;
     private String email;
-    private String gender;
     private String phone;
-    private String avatar;
 }

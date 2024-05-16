@@ -1,13 +1,13 @@
 package com.bas.orderservice.helper;
 
-import com.bas.orderservice.dto.CartDto;
-import com.bas.orderservice.dto.OrderDTO;
-import com.bas.orderservice.entity.Cart;
 import com.bas.orderservice.entity.Order;
+import com.bas.orderservice.request.OrderRequest;
+import com.bas.orderservice.response.OrderResponse;
 
 public class OrderMappingHelper {
-    public static OrderDTO map(final Order order) {
-        return OrderDTO.builder()
+    public static OrderResponse map(final Order order) {
+        return null;
+        /*OrderDTO.builder()
                 .orderId(order.getOrderId())
                 .orderDate(order.getOrderDate())
                 .orderDesc(order.getOrderDesc())
@@ -16,11 +16,11 @@ public class OrderMappingHelper {
                         CartDto.builder()
                                 .cartId(order.getCart().getId())
                                 .build())
-                .build();
+                .build();*/
     }
 
-    public static Order map(final OrderDTO orderDto) {
-        return Order.builder()
+    public static Order map(final OrderRequest orderRequest) {
+        return null; /*Order.builder()
                 .orderId(orderDto.getOrderId())
                 .orderDate(orderDto.getOrderDate())
                 .orderDesc(orderDto.getOrderDesc())
@@ -29,6 +29,6 @@ public class OrderMappingHelper {
                         Cart.builder()
                                 .Id(orderDto.getCartDto().getCartId())
                                 .build())
-                .build();
+                .build();*/
     }
 }

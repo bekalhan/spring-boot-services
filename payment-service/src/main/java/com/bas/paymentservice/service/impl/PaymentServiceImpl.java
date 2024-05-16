@@ -1,11 +1,12 @@
 package com.bas.paymentservice.service.impl;
 
 import com.bas.paymentservice.constant.AppConstant;
-import com.bas.paymentservice.dto.OrderDto;
-import com.bas.paymentservice.dto.PaymentDto;
+
 import com.bas.paymentservice.exception.PaymentNotFound;
 import com.bas.paymentservice.helper.PaymentMapperHelper;
 import com.bas.paymentservice.repository.PaymentRepository;
+import com.bas.paymentservice.request.PaymentRequest;
+import com.bas.paymentservice.response.PaymentResponse;
 import com.bas.paymentservice.service.PaymentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,41 +25,43 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public List<PaymentDto> findAll() {
-        return this.paymentRepository.findAll()
-                .stream()
-                .map(PaymentMapperHelper::map)
-                .map(p -> {
-                    p.setOrderDto(this.restTemplate.getForObject(AppConstant.DiscoveredDomainsApi
-                            .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
-                    return p;
-                })
-                .distinct()
-                .collect(Collectors.toList());
+    public List<PaymentResponse> findAll() {
+        return null;
+//        return this.paymentRepository.findAll()
+//                .stream()
+//                .map(PaymentMapperHelper::map)
+//                .map(p -> {
+//                    p.setOrderDto(this.restTemplate.getForObject(AppConstant.DiscoveredDomainsApi
+//                            .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
+//                    return p;
+//                })
+//                .distinct()
+//                .collect(Collectors.toList());
     }
 
     @Override
-    public PaymentDto findById(Long paymentId) {
-        return this.paymentRepository.findById(paymentId)
-                .map(PaymentMapperHelper::map)
-                .map(p -> {
-                    p.setOrderDto(this.restTemplate.getForObject(AppConstant.DiscoveredDomainsApi
-                            .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
-                    return p;
-                })
-                .orElseThrow(() -> new PaymentNotFound(String.format("Payment with id: %d not found", paymentId)));
+    public PaymentResponse findById(Long paymentId) {
+        return null;
+//        return this.paymentRepository.findById(paymentId)
+//                .map(PaymentMapperHelper::map)
+//                .map(p -> {
+//                    p.setOrderDto(this.restTemplate.getForObject(AppConstant.DiscoveredDomainsApi
+//                            .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
+//                    return p;
+//                })
+//                .orElseThrow(() -> new PaymentNotFound(String.format("Payment with id: %d not found", paymentId)));
     }
 
     @Override
-    public PaymentDto save(PaymentDto paymentDto) {
-        return PaymentMapperHelper.map(this.paymentRepository
-                .save(PaymentMapperHelper.map(paymentDto)));
+    public PaymentResponse save(PaymentRequest paymentRequest) {
+        return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
+                .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
     }
 
     @Override
-    public PaymentDto update(PaymentDto paymentDto) {
-        return PaymentMapperHelper.map(this.paymentRepository
-                .save(PaymentMapperHelper.map(paymentDto)));
+    public PaymentResponse update(PaymentRequest paymentRequest) {
+        return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
+                .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
     }
 
     @Override

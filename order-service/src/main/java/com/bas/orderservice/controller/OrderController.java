@@ -1,9 +1,9 @@
 package com.bas.orderservice.controller;
 
-import com.bas.orderservice.dto.OrderDTO;
 import com.bas.orderservice.entity.Order;
-import com.bas.orderservice.exception.ProductNotExist;
+import com.bas.orderservice.exception.OrderNotExist;
 import com.bas.orderservice.request.OrderRequest;
+import com.bas.orderservice.response.OrderResponse;
 import com.bas.orderservice.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -33,7 +33,7 @@ public class OrderController {
     }
 
     @PostMapping("book")
-    public ResponseEntity<Long>bookOrder(@RequestBody OrderRequest orderRequest) throws ProductNotExist {
+    public ResponseEntity<Long>bookOrder(@RequestBody OrderRequest orderRequest) throws OrderNotExist {
         return new ResponseEntity<>(orderService.bookOrder(orderRequest),HttpStatus.CREATED);
     }
 
@@ -53,13 +53,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDTO>> findAll() {
+    public ResponseEntity<List<OrderResponse>> findAll() {
         log.info("*** OrderDto List, controller; fetch all orders *");
         return ResponseEntity.ok(this.orderService.findAll());
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> findById(
+    public ResponseEntity<OrderResponse> findById(
             @PathVariable("orderId")
             @NotBlank(message = "Input must not be blank")
             @Valid final Long orderId) {
@@ -77,24 +77,24 @@ public class OrderController {
     }
 
     @PutMapping
-    public ResponseEntity<OrderDTO> update(
+    public ResponseEntity<OrderResponse> update(
             @RequestBody
             @NotNull(message = "Input must not be NULL")
-            @Valid final OrderDTO orderDto) {
+            @Valid final OrderRequest orderRequest) {
         log.info("*** OrderDto, resource; update order *");
-        return ResponseEntity.ok(this.orderService.update(orderDto));
+        return ResponseEntity.ok(this.orderService.update(orderRequest));
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> update(
+    public ResponseEntity<OrderResponse> update(
             @PathVariable("orderId")
             @NotBlank(message = "Input must not be blank")
             @Valid final Long orderId,
             @RequestBody
             @NotNull(message = "Input must not be NULL")
-            @Valid final OrderDTO orderDto) {
+            @Valid final OrderRequest orderRequest) {
         log.info("*** OrderDto, resource; update order with orderId *");
-        return ResponseEntity.ok(this.orderService.update(orderId, orderDto));
+        return ResponseEntity.ok(this.orderService.update(orderId, orderRequest));
     }
 
     @DeleteMapping("/{orderId}")

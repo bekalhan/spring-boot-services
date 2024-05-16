@@ -20,4 +20,5 @@ public class Card {
     private Long cardId;
     private String cardNumber;
     private String nameOnCard;
+
 }

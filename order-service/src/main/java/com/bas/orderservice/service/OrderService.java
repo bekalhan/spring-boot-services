@@ -1,9 +1,9 @@
 package com.bas.orderservice.service;
 
 
-import com.bas.orderservice.dto.OrderDTO;
 import com.bas.orderservice.entity.Order;
 import com.bas.orderservice.request.OrderRequest;
+import com.bas.orderservice.response.OrderResponse;
 
 import java.util.List;
 
@@ -17,10 +17,10 @@ public interface OrderService {
 
     List<Order> viewOrderByStatus(List<Long> orderIds, String status);
 
-    List<OrderDTO> findAll();
-    OrderDTO findById(final Long orderId);
+    List<OrderResponse> findAll();
+    OrderResponse findById(final Long orderId);
     OrderRequest save(final OrderRequest orderRequest);
-    OrderDTO update(final OrderDTO orderDto);
-    OrderDTO update(final Long orderId, final OrderDTO orderDto);
+    OrderResponse update(final OrderRequest orderRequest);
+    OrderResponse update(final Long orderId, final OrderRequest orderDto);
     void deleteById(final Long orderId);
 }

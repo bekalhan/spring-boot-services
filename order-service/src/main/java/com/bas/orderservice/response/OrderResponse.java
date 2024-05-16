@@ -1,35 +1,27 @@
 package com.bas.orderservice.response;
 
+import com.bas.orderservice.entity.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class OrderResponse {
+
     private long orderId;
-    private Instant orderDate;
-    private String orderStatus;
+    private LocalDateTime createdAt;
+    private Status orderStatus;
     private double totalPrice;
-    private ProductDetails productDetails;
+    private UserResponse user;
+    private CartResponse cart;
 
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class ProductDetails {
-
-        private String productName;
-        private long productId;
-        private long quantity;
-        private long price;
-        private String imageUrl;
-    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.bas.userservice.entity;
 
+import com.bas.userservice.entity.enums.AddressType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

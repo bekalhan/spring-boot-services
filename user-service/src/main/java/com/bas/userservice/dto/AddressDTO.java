@@ -1,6 +1,6 @@
 package com.bas.userservice.dto;
 
-import com.bas.userservice.entity.AddressType;
+import com.bas.userservice.entity.enums.AddressType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
