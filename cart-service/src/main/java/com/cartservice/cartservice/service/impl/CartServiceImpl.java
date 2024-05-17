@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,28 @@ public class CartServiceImpl implements CartService {
            cartResponses.add(cartResponse);
        }
         return cartResponses;
+    }
+
+    public Optional<CartResponse> getCartByUserId(Long userId) {
+        Optional<Cart> optionalCart = cartRepository.findByUserId(userId);
+
+        if (!optionalCart.isPresent()) {
+            return Optional.empty();
+        }
+
+        Cart cart = optionalCart.get();
+        List<CartItemResponse> cartItemResponses = cartItemService.getCartsByCartId(cart.getCartId());
+
+        CartResponse cartResponse = CartResponse.builder()
+                .cartId(cart.getCartId())
+                .cartItems(cartItemResponses)
+                .totalQuantity(cartItemResponses.stream().mapToInt(CartItemResponse::getQuantity).sum())
+                .cartPrice(cartItemResponses.stream().mapToDouble(cartItemResponse -> cartItemResponse.getProduct().getPrice() * cartItemResponse.getQuantity()).sum())
+                .status(cart.getStatus())
+                .createdAt(cart.getCreatedAt())
+                .build();
+
+        return Optional.of(cartResponse);
     }
 
 

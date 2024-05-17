@@ -15,6 +15,7 @@ public class RouteValidator {
             "user/action/allProducts",
             "product/action/add",
             "product/action/delete",
+            "cart/createCart",
             "/eureka"
     );
 

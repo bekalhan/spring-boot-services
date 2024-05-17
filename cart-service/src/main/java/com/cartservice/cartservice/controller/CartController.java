@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("cart/")
@@ -26,6 +27,11 @@ public class CartController {
     @GetMapping("getCart/{cartId}")
     public ResponseEntity<CartResponse> getCartById(@PathVariable("cartId") Long cartId){
         return new ResponseEntity<>(cartService.getCartById(cartId),HttpStatus.OK);
+    }
+
+    @GetMapping("getCartByUserId/{userId}")
+    public ResponseEntity<Optional<CartResponse>> getCartByUserId(@PathVariable("userId") Long userId){
+        return new ResponseEntity<>(cartService.getCartByUserId(userId),HttpStatus.OK);
     }
 
     @PostMapping("createCart")
