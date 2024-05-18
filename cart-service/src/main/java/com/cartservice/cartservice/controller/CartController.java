@@ -36,6 +36,10 @@ public class CartController {
 
     @PostMapping("createCart")
     public ResponseEntity<Long> createCart(@RequestBody@Valid CartRequest cartRequest){
+        Optional<CartResponse> existingCart = cartService.getCartByUserId(cartRequest.getUserId());
+        if (existingCart.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(cartService.createCart(cartRequest),HttpStatus.CREATED);
     }
 

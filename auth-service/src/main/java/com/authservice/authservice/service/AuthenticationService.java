@@ -134,6 +134,7 @@ public class AuthenticationService {
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
                 var authResponse = AuthenticationResponse.builder()
+                        .userId(user.getId())
                         .accessToken(accessToken)
                         .firstname(user.getFirstname())
                         .lastname(user.getLastname())

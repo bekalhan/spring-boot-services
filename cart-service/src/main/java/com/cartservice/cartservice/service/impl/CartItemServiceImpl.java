@@ -47,6 +47,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     public Long addToCart(CartItemRequest cartItemRequest) {
+        System.out.println("cartitemrequest" + cartItemRequest);
         if(cartItemRequest.getQuantity()<=0)
             throw new IllegalArgumentException("Quantity should be greater than 0");
         CartItem isCartExist = cartItemRepo.findCartandProductExist(cartItemRequest.getCartId(),cartItemRequest.getProductId()).orElse(null);
