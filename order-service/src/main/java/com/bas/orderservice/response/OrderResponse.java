@@ -20,7 +20,7 @@ public class OrderResponse {
     private Status orderStatus;
     private double totalPrice;
     private UserResponse user;
-    private CartResponse cart;
+    //private CartResponse cart;
 
 
 

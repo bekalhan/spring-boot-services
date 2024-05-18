@@ -15,4 +15,5 @@ public interface CartService {
     BasicCartResponse updateCart(Long cartId, CartRequest cartRequest);
     String deleteCart(Long cartId);
     Optional<CartResponse> getCartByUserId (Long userId);
+     String deleteCartItemsByCartId(Long cartId);
 }

@@ -66,7 +66,13 @@ public class CartServiceImpl implements CartService {
         return Optional.of(cartResponse);
     }
 
-
+    public String deleteCartItemsByCartId(Long cartId) {
+        List<CartItemResponse> cartItemResponses = cartItemService.getCartsByCartId(cartId);
+        for (CartItemResponse cartItemResponse : cartItemResponses) {
+            cartItemService.deleteFromCart(cartItemResponse.getCartItemId());
+        }
+        return "All cart items with cart id : " + cartId + " has been deleted.";
+    }
 
     @Override
     public CartResponse getCartById(Long cartId) {

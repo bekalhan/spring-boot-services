@@ -52,4 +52,8 @@ public class CartController {
     public ResponseEntity<String> deleteCart(@PathVariable("cartId") Long cartId){
         return new ResponseEntity<>(cartService.deleteCart(cartId),HttpStatus.OK);
     }
+    @DeleteMapping("deleteItemByCartId/{cartId}")
+    public ResponseEntity deleteItemByCartId(@PathVariable("cartId") Long cartId){
+        return new ResponseEntity<>(cartService.deleteCartItemsByCartId(cartId),HttpStatus.OK);
+    }
 }
