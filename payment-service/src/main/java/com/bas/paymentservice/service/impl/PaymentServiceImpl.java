@@ -2,6 +2,7 @@ package com.bas.paymentservice.service.impl;
 
 import com.bas.paymentservice.constant.AppConstant;
 
+import com.bas.paymentservice.entity.Payment;
 import com.bas.paymentservice.exception.PaymentNotFound;
 import com.bas.paymentservice.helper.PaymentMapperHelper;
 import com.bas.paymentservice.repository.PaymentRepository;
@@ -26,42 +27,44 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentResponse> findAll() {
-        return null;
-//        return this.paymentRepository.findAll()
-//                .stream()
-//                .map(PaymentMapperHelper::map)
-//                .map(p -> {
-//                    p.setOrderDto(this.restTemplate.getForObject(AppConstant.DiscoveredDomainsApi
-//                            .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
-//                    return p;
-//                })
-//                .distinct()
-//                .collect(Collectors.toList());
+        return this.paymentRepository.findAll().stream().map(PaymentMapperHelper::paymentToPaymentResponse).collect(Collectors.toList());
     }
 
     @Override
     public PaymentResponse findById(Long paymentId) {
-        return null;
-//        return this.paymentRepository.findById(paymentId)
-//                .map(PaymentMapperHelper::map)
-//                .map(p -> {
-//                    p.setOrderDto(this.restTemplate.getForObject(AppConstant.DiscoveredDomainsApi
-//                            .ORDER_SERVICE_API_URL + "/" + p.getOrderDto().getOrderId(), OrderDto.class));
-//                    return p;
-//                })
-//                .orElseThrow(() -> new PaymentNotFound(String.format("Payment with id: %d not found", paymentId)));
+        Payment payment  = paymentRepository.findById(paymentId).orElseThrow(() -> new PaymentNotFound(String.format("Payment with id: %d not found", paymentId)));
+        PaymentResponse paymentResponse = PaymentMapperHelper.paymentToPaymentResponse(payment);
+        return paymentResponse;
     }
+
+    @Override
+    public List<PaymentResponse> findPaymentByUserId(Long userId) {
+        return this.paymentRepository.findPaymentByUserId(userId).stream().map(PaymentMapperHelper::paymentToPaymentResponse).collect(Collectors.toList());
+    }
+
 
     @Override
     public PaymentResponse save(PaymentRequest paymentRequest) {
-        return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
-                .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
+        Payment isPaymentExistWithUser = this.paymentRepository.findPaymentByUserId(paymentRequest.getUserId()).orElse(null);
+        if(isPaymentExistWithUser != null)
+        {
+           return update(paymentRequest, isPaymentExistWithUser.getPaymentId());
+        }
+        else
+        {
+            return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
+                    .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
+        }
+
     }
 
     @Override
-    public PaymentResponse update(PaymentRequest paymentRequest) {
-        return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
-                .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
+    public PaymentResponse update(PaymentRequest paymentRequest , Long paymentId) {
+
+        Payment payment = this.paymentRepository.findById(paymentId).orElseThrow(() -> new PaymentNotFound(String.format("Payment with id: %d not found", paymentId)));
+        payment.setCreditCard(paymentRequest.getCreditCard());
+        payment.setShippingAddress(paymentRequest.getShippingAddress());
+        return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository.save(payment));
     }
 
     @Override

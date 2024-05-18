@@ -46,6 +46,12 @@ spring:
             - Path=/cart/**
           filters:
             - AuthenticationFilter
+        - id: payment
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+            - AuthenticationFilter
 management:
   endpoints:
     web:
