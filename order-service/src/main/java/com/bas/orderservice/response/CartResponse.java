@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,16 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderResponse {
-
-    private long orderId;
+public class CartResponse {
+    private Long cartId;
+    private List<CartItemResponse> cartItems;
+    private int totalQuantity;
+    private Double cartPrice;
+    private Status status;
     private LocalDateTime createdAt;
-    private Status orderStatus;
-    private double totalPrice;
-    private Integer totalQuantity;
-    private PaymentResponse paymentResponse;
-    private List<OrderItemResponse> orderItemResponse;
-
-
-
 }

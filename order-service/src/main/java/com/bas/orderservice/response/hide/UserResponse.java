@@ -1,4 +1,4 @@
-package com.bas.orderservice.response;
+package com.bas.orderservice.response.hide;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

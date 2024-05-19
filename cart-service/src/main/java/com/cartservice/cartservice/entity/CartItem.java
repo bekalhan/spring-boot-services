@@ -38,6 +38,5 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
-    //    @JoinColumn(name="user_id")
-    //    private Long userId;
+
 }

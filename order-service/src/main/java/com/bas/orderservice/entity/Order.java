@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -29,28 +30,29 @@ import java.util.Set;
 public class Order   {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", unique = true, nullable = false, updatable = false)
-    private Long orderId;
+    private Long id;
 
-    private String userId;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-//    private String firstName;
-//
-//    private String lastName;
-//
-    private String addressLine1;
-//
-//    private String addressLine2;
-//
-    private String city;
-    private String state;
-    private String phoneNo;
+    @Column(name = "total_amount", nullable = false)
+    private Double totalAmount;
 
-    private Long cartId;
-    @Enumerated(EnumType.STRING)
-    private Status orderStatus;
+    @Column(name = "status", nullable = false)
+    private Status status;
+
+    @Column(name = "created_at", nullable = false)
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> items;
+    @Column(name = "cart_id", nullable = false)
+    private  Long cartId;
+    private Integer totalQuantity;
+    private Long paymentId;
+
+
 
 
 

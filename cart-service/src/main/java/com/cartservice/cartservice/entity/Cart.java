@@ -32,4 +32,5 @@ public class Cart {
     private Status status;
     @OneToMany(mappedBy = "cart",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
+
 }

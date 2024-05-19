@@ -1,7 +1,9 @@
 package com.bas.orderservice.controller;
 
+import com.bas.orderservice.dto.OrderCreationRequest;
 import com.bas.orderservice.entity.Order;
 import com.bas.orderservice.exception.OrderNotExist;
+import com.bas.orderservice.request.CartRequest;
 import com.bas.orderservice.request.OrderRequest;
 import com.bas.orderservice.response.OrderResponse;
 import com.bas.orderservice.service.OrderService;
@@ -32,32 +34,15 @@ public class OrderController {
         return new ResponseEntity<>("orderController", HttpStatus.OK);
     }
 
-    @PostMapping("book")
-    public ResponseEntity<Long>bookOrder(@RequestBody OrderRequest orderRequest) throws OrderNotExist {
-        return new ResponseEntity<>(orderService.bookOrder(orderRequest),HttpStatus.CREATED);
-    }
-
-    @PutMapping("cancel")
-    public ResponseEntity<String>cancelOrder(@RequestParam Long orderId){
-        return new ResponseEntity<>(orderService.cancelOrder(orderId),HttpStatus.OK);
-    }
-
-    @PostMapping("allOrders")
-    public ResponseEntity<List<Order>>viewOrders(@RequestBody List<Long>orderIds){
-        return new ResponseEntity<>(orderService.viewOrders(orderIds),HttpStatus.OK);
-    }
-
-    @PostMapping("order")
-    public ResponseEntity<List<Order>>viewOrderByStatus(@RequestBody List<Long>orderIds,@RequestParam String status){
-        return new ResponseEntity<>(orderService.viewOrderByStatus(orderIds,status),HttpStatus.OK);
-    }
-
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll() {
         log.info("*** OrderDto List, controller; fetch all orders *");
         return ResponseEntity.ok(this.orderService.findAll());
     }
-
+    @GetMapping("findByUserId/{userId}")
+    public ResponseEntity<List<OrderResponse>> findByUserId(@PathVariable("userId") Long userId){
+        return ResponseEntity.ok(this.orderService.findByUserId(userId));
+    }
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> findById(
             @PathVariable("orderId")
@@ -68,21 +53,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderRequest> save(
+    public Long save(
             @RequestBody
             @NotNull(message = "Input must not be NULL")
-            @Valid final OrderRequest orderRequest) {
+            @Valid final OrderCreationRequest orderCreationRequest) {
         log.info("*** OrderDto, resource; save order *");
-        return ResponseEntity.ok(this.orderService.save(orderRequest));
-    }
-
-    @PutMapping
-    public ResponseEntity<OrderResponse> update(
-            @RequestBody
-            @NotNull(message = "Input must not be NULL")
-            @Valid final OrderRequest orderRequest) {
-        log.info("*** OrderDto, resource; update order *");
-        return ResponseEntity.ok(this.orderService.update(orderRequest));
+        return (this.orderService.create(orderCreationRequest.getOrderRequest(), orderCreationRequest.getCartRequest()));
     }
 
     @PutMapping("/{orderId}")
