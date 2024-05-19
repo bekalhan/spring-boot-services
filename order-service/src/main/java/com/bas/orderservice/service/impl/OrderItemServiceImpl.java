@@ -50,6 +50,8 @@ public class OrderItemServiceImpl implements OrderItemService {
                     ProductResponse.class);
             OrderItemResponse orderItemResponse = OrderItemResponse.builder().build();
             orderItemResponse.setProduct(productResponse);
+            orderItemResponse.setOrderId(item.getOrder().getId());
+            orderItemResponse.setOrderItemId(item.getOrderItemId());
             orderItemResponse.setQuantity(item.getQuantity());
             orderItemResponse.setTotalPrice(item.getUnitPrice());
             orderItemResponses.add(orderItemResponse);
