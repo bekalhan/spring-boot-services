@@ -75,6 +75,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long create(OrderRequest orderRequest, CartRequest cartRequest) {
+        System.out.println("cartrequest" + cartRequest);
+        System.out.println("orderrequest" + orderRequest);
         Order order = Order.builder()
                 .userId(orderRequest.getUserId())
                 .totalAmount(cartRequest.getCartPrice())
@@ -87,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = this.orderRepository.save(order);
         CartResponse cartResponse
                 = restTemplate.getForObject(
-                "http://CART-SERVICE/cart/getCartByUserId/" + cartRequest.getCartId(),
+                "http://CART-SERVICE/cart/getCartByUserId/" + cartRequest.getUserId(),
                 CartResponse.class);
         List<CartItemResponse> cartItemResponses = cartResponse.getCartItems();
         for (CartItemResponse cartItem : cartResponse.getCartItems()) {
