@@ -45,17 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentResponse save(PaymentRequest paymentRequest) {
-        Payment isPaymentExistWithUser = this.paymentRepository.findPaymentByUserId(paymentRequest.getUserId()).orElse(null);
-        if(isPaymentExistWithUser != null)
-        {
-           return update(paymentRequest, isPaymentExistWithUser.getPaymentId());
-        }
-        else
-        {
-            return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
-                    .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
-        }
-
+        return PaymentMapperHelper.paymentToPaymentResponse(this.paymentRepository
+                .save(PaymentMapperHelper.paymentRequestToPayment(paymentRequest)));
     }
 
     @Override
