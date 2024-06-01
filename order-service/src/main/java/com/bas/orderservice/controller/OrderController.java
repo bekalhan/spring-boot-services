@@ -2,6 +2,7 @@ package com.bas.orderservice.controller;
 
 import com.bas.orderservice.dto.OrderCreationRequest;
 import com.bas.orderservice.entity.Order;
+import com.bas.orderservice.entity.Status;
 import com.bas.orderservice.exception.OrderNotExist;
 import com.bas.orderservice.request.CartRequest;
 import com.bas.orderservice.request.OrderRequest;
@@ -73,6 +74,16 @@ public class OrderController {
         return ResponseEntity.ok(this.orderService.update(orderId, orderRequest));
     }
 
+    @PutMapping("/changeStatus/{orderId}")
+    public ResponseEntity<String> changeStatus(
+            @PathVariable("orderId")
+            @Valid final Long orderId,
+            @RequestBody
+            @Valid final OrderRequest orderRequest) {
+        log.info("*** String, resource; change order status by orderId *");
+        this.orderService.changeStatus(orderId,orderRequest);
+        return ResponseEntity.ok("Order status changed successfully");
+    }
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Boolean> deleteById(@PathVariable("orderId") final Long orderId) {
         log.info("*** Boolean, resource; delete order by id *");

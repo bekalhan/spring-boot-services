@@ -2,6 +2,7 @@ package com.bas.orderservice.service.impl;
 
 import com.bas.orderservice.entity.Order;
 import com.bas.orderservice.entity.OrderItem;
+import com.bas.orderservice.entity.Status;
 import com.bas.orderservice.exception.OrderNotExist;
 import com.bas.orderservice.helper.OrderMappingHelper;
 import com.bas.orderservice.repository.OrderItemRepository;
@@ -111,5 +112,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteById(Long orderId) {
 
+    }
+
+    public void changeStatus (Long orderId , OrderRequest orderRequest) {
+        Order order = this.orderRepository.findById(orderId).orElseThrow(()-> new OrderNotExist("Order not found"));
+        order.setStatus(orderRequest.getStatus());
+        this.orderRepository.save(order);
     }
 }
