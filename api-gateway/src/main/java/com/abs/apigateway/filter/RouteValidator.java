@@ -14,7 +14,7 @@ public class RouteValidator {
             "/auth/validateTkn",
             "user/action/allProducts",
             "product/action/add",
-            "product/action/delete",
+            "product/action/",
             "cart/createCart",
             "/cart/cartItem/addCartItem",
             "/cart/cartItem/deleteCartItem",

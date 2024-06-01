@@ -17,7 +17,7 @@ spring:
               - GET
               - POST
               - DELETE
-              - GET
+              - PUT
               - OPTIONS
             allowedHeaders: "*"
       routes:
