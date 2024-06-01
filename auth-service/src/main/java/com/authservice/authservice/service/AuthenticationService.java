@@ -13,6 +13,7 @@ import com.authservice.authservice.request.AuthenticationRequest;
 import com.authservice.authservice.request.RegisterRequest;
 import com.authservice.authservice.request.VerificationRequest;
 import com.authservice.authservice.response.AuthenticationResponse;
+import com.authservice.authservice.response.BasicUserResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -163,7 +164,15 @@ public class AuthenticationService {
                 .build()
                 ;
     }
+    public BasicUserResponse findUserById(Integer userId){
+        User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException());
+        BasicUserResponse basicUserResponse = new BasicUserResponse();
+        basicUserResponse.setId(user.getId());
+        basicUserResponse.setFirstName(user.getFirstname());
+        basicUserResponse.setLastName(user.getLastname());
+        return  basicUserResponse;
 
+    }
     public AuthenticationDTO findUserByUsername(String username,String token){
 
         UserDTO userDTO = userRepository.findByUsernameAndField(username);

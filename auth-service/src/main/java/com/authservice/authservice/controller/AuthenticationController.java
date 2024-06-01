@@ -6,6 +6,7 @@ import com.authservice.authservice.request.AuthenticationRequest;
 import com.authservice.authservice.request.RegisterRequest;
 import com.authservice.authservice.request.VerificationRequest;
 import com.authservice.authservice.response.AuthenticationResponse;
+import com.authservice.authservice.response.BasicUserResponse;
 import com.authservice.authservice.service.AuthenticationService;
 import com.authservice.authservice.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +25,6 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
-
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @Valid @RequestBody RegisterRequest request
@@ -47,6 +47,10 @@ public class AuthenticationController {
         return ResponseEntity.ok("test");
     }
 
+    @GetMapping("/getUserById/{userId}")
+    public ResponseEntity<BasicUserResponse> getUserById(@PathVariable Integer userId){
+        return ResponseEntity.ok(authenticationService.findUserById(userId));
+    }
 
     @PostMapping("/refresh-token")
     public void refreshToken(
