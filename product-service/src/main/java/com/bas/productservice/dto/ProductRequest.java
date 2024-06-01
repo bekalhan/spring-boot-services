@@ -23,7 +23,6 @@ public class ProductRequest {
     @NotBlank(message = "description cannot be empty")
     private String description;
     private String imageUrl;
-    @NotNull(message = "quantity should not be null or empty")
     private Integer quantity;
     @NotNull(message = "categoryId must not be null")
     private Long categoryId;

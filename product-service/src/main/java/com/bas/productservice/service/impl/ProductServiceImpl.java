@@ -102,6 +102,9 @@ public class ProductServiceImpl implements ProductService {
             throw new ItemAlreadyExist("Product already exist");
         }
         try {
+            if(productDTO.getImageUrl() == null){
+                productDTO.setImageUrl("https://reimg-teknosa-cloud-prod.mncdn.com/mnresize/600/600/productimage/125079250/125079250_0_MC/9e23e6e6.jpg");
+            }
             Category category = categoryRepository.findById(productDTO.getCategoryId())
                     .orElseThrow(()-> new ResourceNotFoundException("category id","category id", productDTO.getCategoryId()));
             return ProductMapperHelper.map(this.productRepository.save(ProductMapperHelper.map(productDTO,category)));

@@ -73,7 +73,6 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword());
-
         authenticationManager.authenticate(
                 usernamePasswordAuthenticationToken
         );
@@ -91,6 +90,7 @@ public class AuthenticationService {
                 .username(request.getEmail())
                 .firstname(userDetails.get().getFirstname())
                 .lastname(userDetails.get().getLastname())
+                .role(userDetails.get().getRole())
                 .build();
     }
 
@@ -141,6 +141,7 @@ public class AuthenticationService {
                         .username(user.getUsername())
                         .refreshToken(refreshToken)
                         .mfaEnabled(false)
+                        .role(user.getRole())
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }

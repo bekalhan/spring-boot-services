@@ -1,5 +1,6 @@
 package com.authservice.authservice.response;
 
+import com.authservice.authservice.enumPackage.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class AuthenticationResponse {
     private String firstname;
     private String lastname;
     private String username;
+    private Role role;
 }
