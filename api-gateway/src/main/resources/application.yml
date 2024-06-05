@@ -11,12 +11,13 @@ spring:
             allowedOrigins:
               - "http://localhost:3000"
               - "http://localhost:8000"
+              - "http://localhost:5000"
             allowCredentials: true
             allowedMethods:
               - GET
               - POST
               - DELETE
-              - GET
+              - PUT
               - OPTIONS
             allowedHeaders: "*"
       routes:

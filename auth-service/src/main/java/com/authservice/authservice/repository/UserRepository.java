@@ -38,4 +38,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     """)
     List<AuthenticationDTO> findTokenByUserid(@Param("id") Integer id, @Param("token") String token);
 
+    @Query("SELECT u FROM User u WHERE u.id= :userId")
+    User findUserById(Integer userId);
+
+
 }

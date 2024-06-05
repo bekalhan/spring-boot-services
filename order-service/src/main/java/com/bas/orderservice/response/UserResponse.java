@@ -1,4 +1,4 @@
-package com.bas.orderservice.response.hide;
+package com.bas.orderservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class UserResponse {
-    private Long userId;
-    private String fullname;
-    private String username;
-    private String email;
-    private String phone;
+    private Integer Id;
+    private String firstName;
+    private String lastName;
 }

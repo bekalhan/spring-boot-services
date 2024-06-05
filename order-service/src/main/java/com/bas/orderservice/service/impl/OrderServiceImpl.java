@@ -2,6 +2,7 @@ package com.bas.orderservice.service.impl;
 
 import com.bas.orderservice.entity.Order;
 import com.bas.orderservice.entity.OrderItem;
+import com.bas.orderservice.entity.Status;
 import com.bas.orderservice.exception.OrderNotExist;
 import com.bas.orderservice.helper.OrderMappingHelper;
 import com.bas.orderservice.repository.OrderItemRepository;
@@ -36,7 +37,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> findAll() {
-        return this.orderRepository.findAll().stream().map(OrderMappingHelper::orderToOrderResponse).collect(Collectors.toList());
+        List<OrderResponse> orders = this.orderRepository.findAll().stream().map(OrderMappingHelper::orderToOrderResponse).collect(Collectors.toList());
+        for(OrderResponse order: orders){
+            UserResponse userResponse
+                    = restTemplate.getForObject(
+                    "http://AUTH-SERVICE/auth/getUserById/" + Math.toIntExact(order.getUserId().intValue()),
+                    UserResponse.class);
+            order.setUserResponse(userResponse);
+        }
+        return  orders;
     }
 
     @Override
@@ -49,6 +58,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> findByUserId(Long userId) {
         List<Order> orders = this.orderRepository.findByUserId(userId).orElseThrow(() -> new OrderNotExist("Order not found"));
+        UserResponse userResponse
+                = restTemplate.getForObject(
+                "http://AUTH-SERVICE/auth/getUserById/" + Math.toIntExact(userId),
+                UserResponse.class);
         List<OrderResponse> orderResponses = new ArrayList<>();
         for(Order order: orders){
 
@@ -67,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
             orderResponse.setTotalQuantity(order.getTotalQuantity());
             orderResponse.setOrderItemResponse(orderItems);
             orderResponses.add(orderResponse);
+            orderResponse.setUserResponse(userResponse);
         }
 
         return orderResponses;
@@ -111,5 +125,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteById(Long orderId) {
 
+    }
+
+    public void changeStatus (Long orderId , OrderRequest orderRequest) {
+        Order order = this.orderRepository.findById(orderId).orElseThrow(()-> new OrderNotExist("Order not found"));
+        order.setStatus(orderRequest.getStatus());
+        this.orderRepository.save(order);
     }
 }

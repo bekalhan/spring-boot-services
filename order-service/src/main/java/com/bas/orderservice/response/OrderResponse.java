@@ -23,7 +23,8 @@ public class OrderResponse {
     private Integer totalQuantity;
     private PaymentResponse paymentResponse;
     private List<OrderItemResponse> orderItemResponse;
-
+    private Long userId;
+    private UserResponse userResponse;
 
 
 }

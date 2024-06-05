@@ -11,6 +11,7 @@ public class OrderMappingHelper {
                 .orderStatus(order.getStatus())
                 .createdAt(order.getCreatedAt())
                 .totalPrice(order.getTotalAmount())
+                .userId(order.getUserId())
                 .build();
 
 
