@@ -66,12 +66,9 @@ management:
       enabled: true
 
 eureka:
-  instance:
-    client:
-      registerWithEureka: true
-      fetchRegistry: true
-      serverUrl:
-        defaultZone: http://localhost:8761/eureka/
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
 
 server:
   port: 9191

@@ -14,7 +14,7 @@ services:
       interval: 10s
       start_period: 10s
     environment:
-      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_ROOT_PASSWORD: admin
 
   microservice-base-config:
     extends:

@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/sefaksc/config-server.git
+          uri: https://github.com/aaytugozkaya/aaytugozkaya-config-main.git
           timeout: 5
           clone-on-start: true
           force-pull: true

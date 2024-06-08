@@ -16,6 +16,7 @@ services:
       service: network-deploy-service
     networks:
       - abs
+
   configserver:
     image: "rood0/config-server-ms:s4"
     container_name: config-service-ms
@@ -35,6 +36,7 @@ services:
       service: microservice-base-config
     networks:
       - abs
+
   eurekaserver:
     image: "rood0/service-registry-ms:s6"
     container_name: service-registry-ms
@@ -56,25 +58,29 @@ services:
       SPRING_APPLICATION_NAME: "eurekaserver"
     networks:
       - abs
+
   productsdb:
     container_name: productsdb
     ports:
       - 3307:3306
     environment:
-      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: productsdb
     healthcheck:
-      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      test: "mysqladmin ping -h localhost -u root --password=admin"
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql-productsdb-data:/var/lib/mysql
     extends:
       file: common-config.yml
       service: microservice-db-config
     networks:
       - abs
+
   productservice:
-    image: "rood0/product-service-ms:s3"
+    image: "rood0/product-service-ms:s9"
     container_name: product-service-ms
     ports:
       - "8083:8083"
@@ -87,36 +93,46 @@ services:
     depends_on:
       productsdb:
         condition: service_healthy
+      authdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "product-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://productsdb:3306/productsdb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "admin"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
     extends:
       file: common-config.yml
       service: microservice-eureka-config
     networks:
       - abs
+
   paymentdb:
     container_name: paymentdb
     ports:
       - 3308:3306
     environment:
-      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: paymentdb
     healthcheck:
-      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      test: "mysqladmin ping -h localhost -u root --password=admin"
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql-paymentdb-data:/var/lib/mysql
     extends:
       file: common-config.yml
       service: microservice-db-config
     networks:
       - abs
+
   paymentservice:
-    image: "rood0/payment-service-ms:s3"
+    image: "rood0/payment-service-ms:s5"
     container_name: payment-service-ms
     ports:
       - "8400:8400"
@@ -135,30 +151,38 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "payment-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://paymentdb:3306/paymentdb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "admin"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
     extends:
       file: common-config.yml
       service: microservice-eureka-config
     networks:
       - abs
+
   orderdb:
     container_name: orderdb
     ports:
       - 3309:3306
     environment:
-      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: orderdb
     healthcheck:
-      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      test: "mysqladmin ping -h localhost -u root --password=admin"
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql-orderdb-data:/var/lib/mysql
     extends:
       file: common-config.yml
       service: microservice-db-config
     networks:
       - abs
+
   orderservice:
-    image: "rood0/order-service-ms:s3"
+    image: "rood0/order-service-ms:s5"
     container_name: order-service-ms
     ports:
       - "8084:8084"
@@ -177,30 +201,38 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "order-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://orderdb:3306/orderdb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "admin"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
     extends:
       file: common-config.yml
       service: microservice-eureka-config
     networks:
       - abs
+
   cartdb:
     container_name: cartdb
     ports:
       - 3310:3306
     environment:
-      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: cartdb
     healthcheck:
-      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      test: "mysqladmin ping -h localhost -u root --password=admin"
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql-cartdb-data:/var/lib/mysql
     extends:
       file: common-config.yml
       service: microservice-db-config
     networks:
       - abs
+
   cartservice:
-    image: "rood0/cart-service-ms:s5"
+    image: "rood0/cart-service-ms:s7"
     container_name: cart-service-ms
     ports:
       - "8085:8085"
@@ -219,30 +251,37 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cart-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://cartdb:3306/cartdb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "admin"
     extends:
       file: common-config.yml
       service: microservice-eureka-config
     networks:
       - abs
+
   authdb:
     container_name: authdb
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: authdb
     healthcheck:
-      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      test: "mysqladmin ping -h localhost -u root --password=admin"
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql-authdb-data:/var/lib/mysql
     extends:
       file: common-config.yml
       service: microservice-db-config
     networks:
       - abs
+
   authservice:
-    image: "rood0/auth-service-ms:s6"
+    image: "rood0/auth-service-ms:s10"
     container_name: auth-service-ms
     ports:
       - "8081:8081"
@@ -263,15 +302,16 @@ services:
       SPRING_APPLICATION_NAME: "auth-service"
       SPRING_DATASOURCE_URL: "jdbc:mysql://authdb:3306/authdb"
       SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "sefa1220504"
+      SPRING_DATASOURCE_PASSWORD: "admin"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
     extends:
       file: common-config.yml
       service: microservice-eureka-config
     networks:
       - abs
+
   gatewayserver:
-    image: "rood0/api-gateway-ms:s1"
+    image: "rood0/api-gateway-ms:s3"
     container_name: api-gateway-ms
     ports:
       - "9191:9191"
@@ -291,12 +331,21 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - abs
 
 networks:
   abs:
     driver: "bridge"
 
 volumes:
-  mysql-data:
+  mysql-productsdb-data:
     driver: local
-
+  mysql-paymentdb-data:
+    driver: local
+  mysql-orderdb-data:
+    driver: local
+  mysql-cartdb-data:
+    driver: local
+  mysql-authdb-data:
+    driver: local
