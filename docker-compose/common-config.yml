@@ -1,169 +1,37 @@
 services:
-  rabbit:
-    image: rabbitmq:3.13-management
-    hostname: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+  network-deploy-service:
+    networks:
+      - abs
+
+  microservice-db-config:
     extends:
-      file: common-config.yml
       service: network-deploy-service
-  configserver:
-    image: "rood0/configserver"
-    container_name: configserver-ms
-    ports:
-      - "8888:8888"
-    depends_on:
-      rabbit:
-        condition: service_healthy
+    image: mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: sefa1220504
+
+  microservice-base-config:
     extends:
-      file: common-config.yml
+      service: network-deploy-service
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+  microservice-configserver-config:
+    extends:
       service: microservice-base-config
-  eurekaserver:
-    image: "eazybytes/eurekaserver"
-    container_name: eurekaserver-ms
-    ports:
-      - "8761:8761"
-    depends_on:
-      configserver:
-        condition: service_healthy
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://configserver:8888/
+
+  microservice-eureka-config:
     extends:
-      file: common-config.yml
       service: microservice-configserver-config
     environment:
-      SPRING_APPLICATION_NAME: "eurekaserver"
-  productservice:
-    image: "rood0/product-ms"
-    container_name: accounts-ms
-    ports:
-      - "8083:8083"
-    depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: "product-service"
-    extends:
-      file: common-config.yml
-      service: microservice-eureka-config
-  paymentservice:
-    image: "rood0/payment-ms"
-    container_name: payment-ms
-    ports:
-      - "8400:8400"
-    depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: "payment-service"
-    extends:
-      file: common-config.yml
-      service: microservice-eureka-config
-  orderservice:
-    image: "rood0/order-ms"
-    container_name: order-ms
-    ports:
-      - "8084:8084"
-    depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: "order-service"
-    extends:
-      file: common-config.yml
-      service: microservice-eureka-config
-  cartservice:
-    image: "rood0/cart-ms"
-    container_name: cart-ms
-    ports:
-      - "8085:8085"
-    depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: "cart-service"
-    extends:
-      file: common-config.yml
-      service: microservice-eureka-config
-  authservice:
-    image: "rood0/auth-ms"
-    container_name: cart-ms
-    ports:
-      - "8081:8081"
-    depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: "auth-service"
-    extends:
-      file: common-config.yml
-      service: microservice-eureka-config
-  gatewayserver:
-    image: "eazybytes/gatewayserver:s10"
-    container_name: gatewayserver-ms
-    ports:
-      - "9191:9191"
-    depends_on:
-      authservice:
-        condition: service_healthy
-      productservice:
-        condition: service_healthy
-      paymentservice:
-        condition: service_healthy
-      orderservice:
-        condition: service_healthy
-      cartservice:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      SPRING_APPLICATION_NAME: "gatewayserver"
-      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_TIMEOUT: 1s
-    extends:
-      file: common-config.yml
-      service: microservice-eureka-config
-
-  mysql:
-    image: mysql
-    container_name: mysql
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    volumes:
-      - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
-networks:
-  abs:
-    driver: "bridge"
-
-volumes:
-  mysql-data:
-    driver: local
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/

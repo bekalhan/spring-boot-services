@@ -14,9 +14,17 @@ services:
     extends:
       file: common-config.yml
       service: network-deploy-service
+    networks:
+      - abs
   configserver:
-    image: "rood0/configserver"
-    container_name: configserver-ms
+    image: "rood0/config-server-ms:s4"
+    container_name: config-service-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
     ports:
       - "8888:8888"
     depends_on:
@@ -25,11 +33,19 @@ services:
     extends:
       file: common-config.yml
       service: microservice-base-config
+    networks:
+      - abs
   eurekaserver:
-    image: "eazybytes/eurekaserver"
-    container_name: eurekaserver-ms
+    image: "rood0/service-registry-ms:s6"
+    container_name: service-registry-ms
     ports:
       - "8761:8761"
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       configserver:
         condition: service_healthy
@@ -38,12 +54,39 @@ services:
       service: microservice-configserver-config
     environment:
       SPRING_APPLICATION_NAME: "eurekaserver"
+    networks:
+      - abs
+  productsdb:
+    container_name: productsdb
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_DATABASE: productsdb
+    healthcheck:
+      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+    networks:
+      - abs
   productservice:
-    image: "rood0/product-ms"
-    container_name: accounts-ms
+    image: "rood0/product-service-ms:s3"
+    container_name: product-service-ms
     ports:
       - "8083:8083"
+    healthcheck:
+      test: "curl --fail --silent localhost:8083/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
+      productsdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
       eurekaserver:
@@ -53,12 +96,39 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - abs
+  paymentdb:
+    container_name: paymentdb
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_DATABASE: paymentdb
+    healthcheck:
+      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+    networks:
+      - abs
   paymentservice:
-    image: "rood0/payment-ms"
-    container_name: payment-ms
+    image: "rood0/payment-service-ms:s3"
+    container_name: payment-service-ms
     ports:
       - "8400:8400"
+    healthcheck:
+      test: "curl --fail --silent localhost:8400/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
+      paymentdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
       eurekaserver:
@@ -68,12 +138,39 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - abs
+  orderdb:
+    container_name: orderdb
+    ports:
+      - 3309:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_DATABASE: orderdb
+    healthcheck:
+      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+    networks:
+      - abs
   orderservice:
-    image: "rood0/order-ms"
-    container_name: order-ms
+    image: "rood0/order-service-ms:s3"
+    container_name: order-service-ms
     ports:
       - "8084:8084"
+    healthcheck:
+      test: "curl --fail --silent localhost:8084/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
+      orderdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
       eurekaserver:
@@ -83,12 +180,39 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - abs
+  cartdb:
+    container_name: cartdb
+    ports:
+      - 3310:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_DATABASE: cartdb
+    healthcheck:
+      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+    networks:
+      - abs
   cartservice:
-    image: "rood0/cart-ms"
-    container_name: cart-ms
+    image: "rood0/cart-service-ms:s5"
+    container_name: cart-service-ms
     ports:
       - "8085:8085"
+    healthcheck:
+      test: "curl --fail --silent localhost:8085/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
+      cartdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
       eurekaserver:
@@ -98,24 +222,57 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - abs
+  authdb:
+    container_name: authdb
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: sefa1220504
+      MYSQL_DATABASE: authdb
+    healthcheck:
+      test: "mysqladmin ping -h localhost -u root --password=sefa1220504"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+    networks:
+      - abs
   authservice:
-    image: "rood0/auth-ms"
-    container_name: cart-ms
+    image: "rood0/auth-service-ms:s6"
+    container_name: auth-service-ms
     ports:
       - "8081:8081"
+    healthcheck:
+      test: "curl --fail --silent localhost:8081/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
+      authdb:
+        condition: service_healthy
       configserver:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "auth-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://authdb:3306/authdb"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "sefa1220504"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+    networks:
+      - abs
   gatewayserver:
-    image: "eazybytes/gatewayserver:s10"
-    container_name: gatewayserver-ms
+    image: "rood0/api-gateway-ms:s1"
+    container_name: api-gateway-ms
     ports:
       - "9191:9191"
     depends_on:
@@ -129,14 +286,8 @@ services:
         condition: service_healthy
       cartservice:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "gatewayserver"
-      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
-      SPRING_DATA_REDIS_TIMEOUT: 1s
     extends:
       file: common-config.yml
       service: microservice-eureka-config
@@ -144,3 +295,8 @@ services:
 networks:
   abs:
     driver: "bridge"
+
+volumes:
+  mysql-data:
+    driver: local
+

@@ -8,4 +8,8 @@ spring:
     port: 5672
     username: guest
     password: guest
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
 

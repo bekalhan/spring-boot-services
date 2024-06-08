@@ -8,6 +8,28 @@ spring:
     port: 5672
     username: guest
     password: guest
+  datasource:
+    url: jdbc:mysql://localhost:3306/authdb
+    username: root
+    password: sefa1220504
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: always
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaserver:8761/eureka/
+
+app:
+  jwt-secret: "7C2F9A338F7F55DF7D8E8EBBE1405A659A06731A44D482FAABAD54FF293CFB79"
+  jwt-expiration: 86400000
+  refresh-token:
+    jwt-expiration: 604800000
+
 management:
   endpoints:
     web:
