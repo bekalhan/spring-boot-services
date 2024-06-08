@@ -311,7 +311,7 @@ services:
       - abs
 
   gatewayserver:
-    image: "rood0/api-gateway-ms:s3"
+    image: "rood0/api-gateway-ms:s4"
     container_name: api-gateway-ms
     ports:
       - "9191:9191"

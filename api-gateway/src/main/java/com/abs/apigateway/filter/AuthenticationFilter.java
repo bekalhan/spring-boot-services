@@ -86,7 +86,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                 try {
                     System.out.println("Validating token: " + authHeader);
-                    restTemplate.getForObject("http://localhost:8081/auth/validateTkn?jwt=" + authHeader, UserDTO.class);
+                    restTemplate.getForObject("http://authservice:8081/auth/validateTkn?jwt=" + authHeader, UserDTO.class);
                     System.out.println("Token validated successfully");
                 } catch (Exception e) {
                     System.out.println("Token validation failed: " + e.getMessage());
